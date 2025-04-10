@@ -1,1 +1,0 @@
-# wxtm-bridge-admin-tapplet
