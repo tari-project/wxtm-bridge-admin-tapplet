@@ -3,6 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
+import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from './config';
 
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
@@ -10,8 +11,8 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Auth0Provider
-      domain="dev-y38p834gjptooc4g.us.auth0.com"
-      clientId="AcinJvjWp1Dr41gPcJeQ20r5vcsteks4"
+      domain={AUTH0_DOMAIN}
+      clientId={AUTH0_CLIENT_ID}
       redirectUri={window.location.origin}
     >
       <App />
