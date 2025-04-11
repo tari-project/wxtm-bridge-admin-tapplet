@@ -1,6 +1,14 @@
 # wxtm-bridge-admin-tapplet
 
-## Available Scripts
+### Setup env
+
+Create a `.env` file in the root directory and add the following variables:
+
+```
+VITE_API_URL=<wxtm backend url>
+VITE_AUTH0_DOMAIN=<auth0 domain>
+VITE_AUTH0_CLIENT_ID=<auth0 client id>
+```
 
 ### Running the development server.
 

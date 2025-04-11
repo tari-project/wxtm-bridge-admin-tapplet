@@ -25,12 +25,11 @@ import { Header } from './components/header';
 import { ColorModeContextProvider } from './contexts/color-mode';
 import { Login } from './pages/login';
 import { UsersList } from './pages/user';
+import { API_URL } from './config';
 
 function App() {
-  const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
-
-  const API_URL = 'http://localhost:3001';
   const dataProvider = nestjsxCrudDataProvider(API_URL);
+  const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
 
   if (isLoading) {
     return <span>loading...</span>;
