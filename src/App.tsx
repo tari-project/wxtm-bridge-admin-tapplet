@@ -28,8 +28,8 @@ import { UsersList } from './pages/user';
 import { API_URL } from './config';
 
 function App() {
-  const dataProvider = nestjsxCrudDataProvider(API_URL);
-  const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
+  const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
+  const { isLoading, user, logout, getAccessTokenSilently } = useAuth0();
 
   if (isLoading) {
     return <span>loading...</span>;
@@ -53,10 +53,10 @@ function App() {
     },
     check: async () => {
       try {
-        const token = await getIdTokenClaims();
+        const token = await getAccessTokenSilently();
         if (token) {
           axios.defaults.headers.common = {
-            Authorization: `Bearer ${token.__raw}`,
+            Authorization: `Bearer ${token}`,
           };
           return {
             authenticated: true,
