@@ -3,7 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
-import { AUTH0_CLIENT_ID, AUTH0_DOMAIN } from './config';
+import { AUTH0_CLIENT_ID, AUTH0_DOMAIN, AUTH0_AUDIENCE } from './config';
 
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
@@ -13,6 +13,7 @@ root.render(
     <Auth0Provider
       domain={AUTH0_DOMAIN}
       clientId={AUTH0_CLIENT_ID}
+      audience={AUTH0_AUDIENCE}
       redirectUri={window.location.origin}
     >
       <App />
