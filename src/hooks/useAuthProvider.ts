@@ -5,11 +5,10 @@ import { AxiosStatic } from 'axios';
 import { API_URL } from '../config';
 
 export const useAuthProvider = ({ axios }: { axios: AxiosStatic }) => {
-  const { isLoading, user, logout, getAccessTokenSilently, loginWithPopup } = useAuth0();
+  const { isLoading, user, logout, getAccessTokenSilently } = useAuth0();
 
   const authProvider: AuthProvider = {
     login: async () => {
-      loginWithPopup();
       return {
         success: true,
       };
