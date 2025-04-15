@@ -2,6 +2,9 @@ name: 'Run tests on commit'
 
 on: [push]
 
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   tests:
     runs-on: ubuntu-22.04
@@ -25,8 +28,11 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
 
-      - name: Install packages
-        run: npm ci
+      - name: Install dependencies
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken ${{ env.NODE_AUTH_TOKEN }}
+          npm config set @tari-project:registry https://npm.pkg.github.com
+          npm ci
 
       - name: Lint
         run: npm run lint

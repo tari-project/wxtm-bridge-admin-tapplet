@@ -1,4 +1,4 @@
-import { AuthBindings, Authenticated, Refine } from '@refinedev/core';
+import { Authenticated, Refine } from '@refinedev/core';
 import { DevtoolsPanel, DevtoolsProvider } from '@refinedev/devtools';
 import { RefineKbar, RefineKbarProvider } from '@refinedev/kbar';
 
@@ -9,7 +9,6 @@ import {
   useNotificationProvider,
 } from '@refinedev/mui';
 
-import { useAuth0 } from '@auth0/auth0-react';
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import nestjsxCrudDataProvider from '@refinedev/nestjsx-crud';
@@ -26,72 +25,15 @@ import { ColorModeContextProvider } from './contexts/color-mode';
 import { Login } from './pages/login';
 import { UsersList } from './pages/user';
 import { API_URL } from './config';
+import { useAuthProvider } from './hooks/useAuthProvider';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
-  const { isLoading, user, logout, getAccessTokenSilently } = useAuth0();
+  const { isLoading, authProvider } = useAuthProvider({ axios });
 
   if (isLoading) {
     return <span>loading...</span>;
   }
-
-  const authProvider: AuthBindings = {
-    login: async () => {
-      return {
-        success: true,
-      };
-    },
-    logout: async () => {
-      logout({ returnTo: window.location.origin });
-      return {
-        success: true,
-      };
-    },
-    onError: async (error) => {
-      console.error(error);
-      return { error };
-    },
-    check: async () => {
-      try {
-        const token = await getAccessTokenSilently();
-        if (token) {
-          axios.defaults.headers.common = {
-            Authorization: `Bearer ${token}`,
-          };
-          return {
-            authenticated: true,
-          };
-        } else {
-          return {
-            authenticated: false,
-            error: {
-              message: 'Check failed',
-              name: 'Token not found',
-            },
-            redirectTo: '/login',
-            logout: true,
-          };
-        }
-      } catch (error) {
-        return {
-          authenticated: false,
-          error: new Error(error as string),
-          redirectTo: '/login',
-          logout: true,
-        };
-      }
-    },
-    getPermissions: async () => null,
-    getIdentity: async () => {
-      if (user) {
-        return {
-          ...user,
-          avatar: user.picture,
-        };
-      }
-      return null;
-    },
-  };
 
   return (
     <BrowserRouter>
