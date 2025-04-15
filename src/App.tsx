@@ -20,6 +20,11 @@ import routerBindings, {
 } from '@refinedev/react-router';
 import axios from 'axios';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router';
+
+import PersonIcon from '@mui/icons-material/Person';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+
 import { Header } from './components/header';
 import { ColorModeContextProvider } from './contexts/color-mode';
 import { Login } from './pages/login';
@@ -27,6 +32,8 @@ import { UsersList } from './pages/user';
 import { API_URL } from './config';
 import { useAuthProvider } from './hooks/useAuthProvider';
 import { WalletProvider } from './components/wallet-provider';
+import { safeTransactionsDataProvider } from './providers/safe-transactions-data-provider';
+import { SafeTransactionsList } from './pages/safe-transactions';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
@@ -46,7 +53,7 @@ function App() {
             <DevtoolsProvider>
               <WalletProvider>
                 <Refine
-                  dataProvider={dataProvider}
+                  dataProvider={{ default: dataProvider, safeTransactionsDataProvider }}
                   notificationProvider={useNotificationProvider}
                   routerProvider={routerBindings}
                   authProvider={authProvider}
@@ -54,6 +61,13 @@ function App() {
                     {
                       name: 'user',
                       list: '/user',
+                      icon: <PersonIcon />,
+                    },
+                    {
+                      name: 'safe transaction',
+                      list: '/safe-transactions',
+                      icon: <SwapHorizIcon />,
+                      meta: { dataProviderName: 'safeTransactionsDataProvider' },
                     },
                   ]}
                   options={{
@@ -61,7 +75,7 @@ function App() {
                     warnWhenUnsavedChanges: true,
                     useNewQueryKeys: true,
                     title: {
-                      icon: '',
+                      icon: <DashboardIcon />,
                       text: 'WXTM Bridge',
                     },
                   }}
@@ -79,11 +93,11 @@ function App() {
                         </Authenticated>
                       }
                     >
-                      <Route path="/user">
-                        <Route index element={<UsersList />} />
-                      </Route>
+                      <Route path="/user" element={<UsersList />} />
+                      <Route path="/safe-transactions" element={<SafeTransactionsList />} />
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
+
                     <Route
                       element={
                         <Authenticated key="authenticated-outer" fallback={<Outlet />}>
