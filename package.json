@@ -19,12 +19,16 @@
     "@refinedev/nestjsx-crud": "^5.0.1",
     "@refinedev/react-hook-form": "^4.8.14",
     "@refinedev/react-router": "^1.0.0",
+    "@tanstack/react-query": "^5.74.3",
+    "@tari-project/wxtm-bridge-backend-api": "0.1.4",
     "axios": "^1.6.2",
+    "connectkit": "^1.9.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.30.0",
     "react-router": "^7.0.2",
-    "@tari-project/wxtm-bridge-backend-api": "0.1.4"
+    "viem": "^2.27.0",
+    "wagmi": "^2.14.16"
   },
   "devDependencies": {
     "@types/node": "^18.16.2",
