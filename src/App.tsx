@@ -26,6 +26,7 @@ import { Login } from './pages/login';
 import { UsersList } from './pages/user';
 import { API_URL } from './config';
 import { useAuthProvider } from './hooks/useAuthProvider';
+import { WalletProvider } from './components/wallet-provider';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
@@ -43,60 +44,62 @@ function App() {
           <GlobalStyles styles={{ html: { WebkitFontSmoothing: 'auto' } }} />
           <RefineSnackbarProvider>
             <DevtoolsProvider>
-              <Refine
-                dataProvider={dataProvider}
-                notificationProvider={useNotificationProvider}
-                routerProvider={routerBindings}
-                authProvider={authProvider}
-                resources={[
-                  {
-                    name: 'user',
-                    list: '/user',
-                  },
-                ]}
-                options={{
-                  syncWithLocation: true,
-                  warnWhenUnsavedChanges: true,
-                  useNewQueryKeys: true,
-                  title: {
-                    icon: '',
-                    text: 'WXTM Bridge',
-                  },
-                }}
-              >
-                <Routes>
-                  <Route
-                    element={
-                      <Authenticated
-                        key="authenticated-inner"
-                        fallback={<CatchAllNavigate to="/login" />}
-                      >
-                        <ThemedLayoutV2 Header={Header}>
-                          <Outlet />
-                        </ThemedLayoutV2>
-                      </Authenticated>
-                    }
-                  >
-                    <Route path="/user">
-                      <Route index element={<UsersList />} />
+              <WalletProvider>
+                <Refine
+                  dataProvider={dataProvider}
+                  notificationProvider={useNotificationProvider}
+                  routerProvider={routerBindings}
+                  authProvider={authProvider}
+                  resources={[
+                    {
+                      name: 'user',
+                      list: '/user',
+                    },
+                  ]}
+                  options={{
+                    syncWithLocation: true,
+                    warnWhenUnsavedChanges: true,
+                    useNewQueryKeys: true,
+                    title: {
+                      icon: '',
+                      text: 'WXTM Bridge',
+                    },
+                  }}
+                >
+                  <Routes>
+                    <Route
+                      element={
+                        <Authenticated
+                          key="authenticated-inner"
+                          fallback={<CatchAllNavigate to="/login" />}
+                        >
+                          <ThemedLayoutV2 Header={Header}>
+                            <Outlet />
+                          </ThemedLayoutV2>
+                        </Authenticated>
+                      }
+                    >
+                      <Route path="/user">
+                        <Route index element={<UsersList />} />
+                      </Route>
+                      <Route path="*" element={<ErrorComponent />} />
                     </Route>
-                    <Route path="*" element={<ErrorComponent />} />
-                  </Route>
-                  <Route
-                    element={
-                      <Authenticated key="authenticated-outer" fallback={<Outlet />}>
-                        <NavigateToResource />
-                      </Authenticated>
-                    }
-                  >
-                    <Route path="/login" element={<Login />} />
-                  </Route>
-                </Routes>
+                    <Route
+                      element={
+                        <Authenticated key="authenticated-outer" fallback={<Outlet />}>
+                          <NavigateToResource />
+                        </Authenticated>
+                      }
+                    >
+                      <Route path="/login" element={<Login />} />
+                    </Route>
+                  </Routes>
 
-                <RefineKbar />
-                <UnsavedChangesNotifier />
-                <DocumentTitleHandler />
-              </Refine>
+                  <RefineKbar />
+                  <UnsavedChangesNotifier />
+                  <DocumentTitleHandler />
+                </Refine>
+              </WalletProvider>
               <DevtoolsPanel />
             </DevtoolsProvider>
           </RefineSnackbarProvider>
