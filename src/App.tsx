@@ -30,10 +30,11 @@ import { ColorModeContextProvider } from './contexts/color-mode';
 import { Login } from './pages/login';
 import { UsersList } from './pages/user';
 import { API_URL } from './config';
-import { useAuthProvider } from './hooks/useAuthProvider';
+import { useAuthProvider } from './hooks/use-auth-provider';
 import { WalletProvider } from './components/wallet-provider';
 import { safeTransactionsDataProvider } from './providers/safe-transactions-data-provider';
 import { SafeTransactionsList } from './pages/safe-transactions';
+import { SafeTransactionsShow } from './pages/safe-transactions/show';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
@@ -66,6 +67,7 @@ function App() {
                     {
                       name: 'safe transaction',
                       list: '/safe-transactions',
+                      show: '/safe-transactions/show/:id',
                       icon: <SwapHorizIcon />,
                       meta: { dataProviderName: 'safeTransactionsDataProvider' },
                     },
@@ -93,8 +95,17 @@ function App() {
                         </Authenticated>
                       }
                     >
-                      <Route path="/user" element={<UsersList />} />
-                      <Route path="/safe-transactions" element={<SafeTransactionsList />} />
+                      <Route index element={<NavigateToResource resource="user" />} />
+
+                      <Route path="/user">
+                        <Route index element={<UsersList />} />
+                      </Route>
+
+                      <Route path="/safe-transactions">
+                        <Route index element={<SafeTransactionsList />} />
+                        <Route path="show/:id" element={<SafeTransactionsShow />} />
+                      </Route>
+
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
 
