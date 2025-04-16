@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { List, useDataGrid } from '@refinedev/mui';
+import { List, ShowButton, useDataGrid } from '@refinedev/mui';
 
 import { SafeTransaction } from '../../providers/safe-transactions-data-provider';
 
@@ -36,14 +36,6 @@ export const SafeTransactionsList = () => {
         sortable: false,
       },
       {
-        field: 'confirmationsRequired',
-        headerName: 'Treshold',
-        display: 'flex',
-        flex: 1,
-        filterable: false,
-        sortable: false,
-      },
-      {
         field: '',
         headerName: 'Confirmations',
         display: 'flex',
@@ -52,7 +44,18 @@ export const SafeTransactionsList = () => {
         sortable: false,
         renderCell: ({ row }) => `${row.confirmationsRequired}/${row.confirmations?.length || 0}`,
       },
-
+      {
+        field: 'actions',
+        headerName: 'Actions',
+        align: 'right',
+        headerAlign: 'right',
+        minWidth: 120,
+        sortable: false,
+        display: 'flex',
+        renderCell: function render({ row }) {
+          return <ShowButton variant="contained" recordItemId={row.safeTxHash} />;
+        },
+      },
       {
         field: 'submissionDate',
         headerName: 'Submitted At',

@@ -1,10 +1,17 @@
 import axios from 'axios';
-import { DataProvider, GetListParams, GetListResponse } from '@refinedev/core';
+import {
+  BaseKey,
+  DataProvider,
+  GetListParams,
+  GetListResponse,
+  GetOneResponse,
+} from '@refinedev/core';
 import { SafeMultisigTransactionListResponse } from '@safe-global/api-kit';
+import { SAFE_API_BASE_URL, SAFE_ADDRESS } from '../config';
 
 export type SafeTransaction = SafeMultisigTransactionListResponse['results'][0];
 
-import { SAFE_API_BASE_URL, SAFE_ADDRESS } from '../config';
+const transactionCache: Record<string, SafeTransaction> = {};
 
 export const safeTransactionsDataProvider: DataProvider = {
   getList: async <TData = SafeTransaction>({
@@ -26,6 +33,10 @@ export const safeTransactionsDataProvider: DataProvider = {
 
       const { results, count } = response.data;
 
+      results.forEach((transaction) => {
+        transactionCache[transaction.safeTxHash] = transaction;
+      });
+
       return {
         data: results as unknown as TData[],
         total: count,
@@ -39,9 +50,22 @@ export const safeTransactionsDataProvider: DataProvider = {
     }
   },
 
-  getOne: async () => {
-    throw new Error('getOne method is not implemented in safeTransactionsDataProvider');
+  getOne: async <TData = SafeTransaction>({
+    id,
+  }: {
+    id: BaseKey;
+  }): Promise<GetOneResponse<TData>> => {
+    const transaction = transactionCache[id];
+
+    if (!transaction) {
+      throw new Error(`Transaction with ID ${id} not found in cache`);
+    }
+
+    return {
+      data: transaction as unknown as TData,
+    };
   },
+
   create: async () => {
     throw new Error('create method is not implemented in safeTransactionsDataProvider');
   },
