@@ -1,35 +1,26 @@
 import { useState } from 'react';
 import { waitForTransactionReceipt } from '@wagmi/core';
-import { useAccount } from 'wagmi';
-import Safe, { Eip1193Provider } from '@safe-global/protocol-kit';
+import { useNotification, useNavigation } from '@refinedev/core';
 
-import { SAFE_ADDRESS } from '../config';
 import { wagmiConfig } from '../config/wagmi-config';
 import { SafeTransaction } from '../providers/safe-transactions-data-provider';
+import { useSafe } from './use-safe';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const useExecuteTransaction = () => {
   const [loading, setLoading] = useState(false);
-  const { chainId, address, connector } = useAccount();
+  const { initSafe } = useSafe();
+  const { open } = useNotification();
+  const { push } = useNavigation();
 
   const executeTransaction = async (transaction: SafeTransaction) => {
     setLoading(true);
 
     try {
-      if (!connector || !chainId) {
-        throw new Error('No connector or chainID were found');
-      }
+      const safe = await initSafe();
 
-      const provider = (await connector.getProvider()) as Eip1193Provider;
-
-      const protocolKit = await Safe.init({
-        provider,
-        signer: address,
-        safeAddress: SAFE_ADDRESS,
-      });
-
-      const tx = await protocolKit.executeTransaction(transaction);
+      const tx = await safe.executeTransaction(transaction);
 
       const receipt = await waitForTransactionReceipt(wagmiConfig, {
         hash: tx.hash as `0x${string}`,
@@ -41,8 +32,22 @@ export const useExecuteTransaction = () => {
 
       await delay(5000);
       setLoading(false);
+
+      open?.({
+        type: 'success',
+        description: 'Success',
+        message: 'Transaction executed successfully',
+      });
+
+      push('/safe-transactions');
     } catch (e) {
       setLoading(false);
+      open?.({
+        type: 'error',
+        description: 'Error',
+        message: 'Failed to execute transaction',
+      });
+
       console.log('Error in useExecuteTransaction', e);
     }
   };

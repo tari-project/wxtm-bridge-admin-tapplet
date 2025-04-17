@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 import {
   Box,
   Button,
-  Chip,
   Divider,
   List,
   ListItem,
@@ -10,16 +9,18 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useShow, useNavigation } from '@refinedev/core';
+import { useShow } from '@refinedev/core';
 import { Show } from '@refinedev/mui';
 
 import { SafeTransaction } from '../../providers/safe-transactions-data-provider';
 import { useSignTransaction } from '../../hooks/use-sign-transaction';
 import { useExecuteTransaction } from '../../hooks/use-execute-transaction';
+import { SafeTransactionStatus } from '../../components/safe-transaction-status';
+import CallDataView from '../../components/call-data-view';
+import { decodeWXTMTokenCalldata } from '../../helpers/decode-wxtm-token-calldata';
 
 export const SafeTransactionsShow = () => {
   const { query } = useShow<SafeTransaction>({});
-  const { push } = useNavigation();
   const { signTransaction, loading } = useSignTransaction();
   const { executeTransaction, loading: executingTransaction } = useExecuteTransaction();
 
@@ -28,19 +29,15 @@ export const SafeTransactionsShow = () => {
 
   const handleSignTransaction = useCallback(() => {
     if (transaction) {
-      signTransaction(transaction).then(() => {
-        push('/safe-transactions');
-      });
+      signTransaction(transaction);
     }
-  }, [transaction, signTransaction, push]);
+  }, [transaction, signTransaction]);
 
   const handleExecuteTransaction = useCallback(() => {
     if (transaction) {
-      executeTransaction(transaction).then(() => {
-        push('/safe-transactions');
-      });
+      executeTransaction(transaction);
     }
-  }, [transaction, executeTransaction, push]);
+  }, [transaction, executeTransaction]);
 
   const allSignaturesCollected = useMemo(() => {
     return transaction?.confirmationsRequired === transaction?.confirmations?.length;
@@ -49,6 +46,10 @@ export const SafeTransactionsShow = () => {
   const canExecuteTransaction = useMemo(() => {
     return allSignaturesCollected && !transaction?.isExecuted;
   }, [transaction, allSignaturesCollected]);
+
+  if (!transaction) {
+    return null;
+  }
 
   return (
     <Show
@@ -79,21 +80,9 @@ export const SafeTransactionsShow = () => {
       )}
     >
       <Stack gap={1} mt={2}>
-        <Box>
-          {transaction?.isSuccessful ? (
-            <Chip label="Success" color="success" size="small" />
-          ) : (
-            <Chip
-              label={`${transaction?.confirmations?.length || 0}/${
-                transaction?.confirmationsRequired
-              } Signatures`}
-              color="info"
-              size="small"
-            />
-          )}
-        </Box>
+        <SafeTransactionStatus transaction={transaction} />
 
-        {transaction?.confirmations && (
+        {transaction.confirmations && (
           <List dense>
             {transaction.confirmations.map((confirmation, index) => (
               <Box key={confirmation.owner}>
@@ -111,6 +100,8 @@ export const SafeTransactionsShow = () => {
             ))}
           </List>
         )}
+
+        <CallDataView decodedData={decodeWXTMTokenCalldata({ data: transaction.data })} />
       </Stack>
     </Show>
   );
