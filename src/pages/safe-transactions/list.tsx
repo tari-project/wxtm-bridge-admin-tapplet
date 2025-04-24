@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { DateField, List, useDataGrid } from '@refinedev/mui';
+import { List, useDataGrid } from '@refinedev/mui';
 import { Chip } from '@mui/material';
 import { useNavigation } from '@refinedev/core';
 
@@ -8,6 +8,7 @@ import { SafeTransaction } from '../../providers/safe-transactions-data-provider
 import { BlockchainExplorerLink } from '../../components/blockchain-explorer-link';
 import { SafeTransactionStatus } from '../../components/safe-transaction-status';
 import { decodeWXTMTokenCalldata } from '../../helpers/decode-wxtm-token-calldata';
+import { DateFormatedField } from '../../components/date-formated-field';
 
 export const SafeTransactionsList = () => {
   const { dataGridProps } = useDataGrid({
@@ -85,7 +86,7 @@ export const SafeTransactionsList = () => {
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
-          return <DateField value={row.submissionDate} format="YYYY-MM-DD HH:MM" />;
+          return <DateFormatedField date={row.submissionDate} />;
         },
       },
       {
@@ -97,12 +98,7 @@ export const SafeTransactionsList = () => {
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
-          return (
-            <DateField
-              value={row.isExecuted ? row.executionDate : null}
-              format="YYYY-MM-DD HH:MM"
-            />
-          );
+          return <DateFormatedField date={row.isExecuted ? row.executionDate : null} />;
         },
       },
     ],

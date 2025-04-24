@@ -1,5 +1,5 @@
 import { Authenticated, Refine } from '@refinedev/core';
-import { DevtoolsPanel, DevtoolsProvider } from '@refinedev/devtools';
+import { DevtoolsProvider } from '@refinedev/devtools';
 import { RefineKbar, RefineKbarProvider } from '@refinedev/kbar';
 
 import {
@@ -21,20 +21,21 @@ import routerBindings, {
 import axios from 'axios';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router';
 
-import PersonIcon from '@mui/icons-material/Person';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import LockIcon from '@mui/icons-material/Lock';
 
 import { Header } from './components/header';
 import { ColorModeContextProvider } from './contexts/color-mode';
 import { Login } from './pages/login';
-import { UsersList } from './pages/user';
 import { API_URL } from './config';
 import { useAuthProvider } from './hooks/use-auth-provider';
 import { WalletProvider } from './components/wallet-provider';
 import { safeTransactionsDataProvider } from './providers/safe-transactions-data-provider';
 import { SafeTransactionsList } from './pages/safe-transactions';
 import { SafeTransactionsShow } from './pages/safe-transactions/show';
+import { WrapTokenTransactionsList } from './pages/wrap-token-transactions';
+import { WrapTokenTransactionsShow } from './pages/wrap-token-transactions/show';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
@@ -60,15 +61,16 @@ function App() {
                   authProvider={authProvider}
                   resources={[
                     {
-                      name: 'user',
-                      list: '/user',
-                      icon: <PersonIcon />,
+                      name: 'wrap-token-transactions',
+                      list: '/wrap-token-transactions',
+                      show: '/wrap-token-transactions/show/:id',
+                      icon: <SwapHorizIcon />,
                     },
                     {
                       name: 'safe transaction',
                       list: '/safe-transactions',
                       show: '/safe-transactions/show/:id',
-                      icon: <SwapHorizIcon />,
+                      icon: <LockIcon />,
                       meta: { dataProviderName: 'safeTransactionsDataProvider' },
                     },
                   ]}
@@ -95,10 +97,14 @@ function App() {
                         </Authenticated>
                       }
                     >
-                      <Route index element={<NavigateToResource resource="user" />} />
+                      <Route
+                        index
+                        element={<NavigateToResource resource="wrap-token-transactions" />}
+                      />
 
-                      <Route path="/user">
-                        <Route index element={<UsersList />} />
+                      <Route path="/wrap-token-transactions">
+                        <Route index element={<WrapTokenTransactionsList />} />
+                        <Route path="show/:id" element={<WrapTokenTransactionsShow />} />
                       </Route>
 
                       <Route path="/safe-transactions">
@@ -125,7 +131,7 @@ function App() {
                   <DocumentTitleHandler />
                 </Refine>
               </WalletProvider>
-              <DevtoolsPanel />
+              {/* <DevtoolsPanel /> */}
             </DevtoolsProvider>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
