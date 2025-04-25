@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Button, Stack, TextField } from '@mui/material';
-import { useShow, useUpdate } from '@refinedev/core';
+import { useShow } from '@refinedev/core';
 import { Show } from '@refinedev/mui';
 import { utils } from 'ethers';
 
