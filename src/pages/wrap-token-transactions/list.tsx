@@ -86,7 +86,7 @@ export const WrapTokenTransactionsList = () => {
         {...dataGridProps}
         columns={columns}
         onRowClick={(params) => {
-          push(`/wrap-token-transactions/show/${params.row.id}`);
+          push(`/wrap-token-transactions/edit/${params.row.id}`);
         }}
       />
     </List>
