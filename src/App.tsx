@@ -35,7 +35,7 @@ import { safeTransactionsDataProvider } from './providers/safe-transactions-data
 import { SafeTransactionsList } from './pages/safe-transactions';
 import { SafeTransactionsShow } from './pages/safe-transactions/show';
 import { WrapTokenTransactionsList } from './pages/wrap-token-transactions';
-import { WrapTokenTransactionsShow } from './pages/wrap-token-transactions/show';
+import { WrapTokenTransactionsEdit } from './pages/wrap-token-transactions/edit';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
@@ -63,7 +63,7 @@ function App() {
                     {
                       name: 'wrap-token-transactions',
                       list: '/wrap-token-transactions',
-                      show: '/wrap-token-transactions/show/:id',
+                      edit: '/wrap-token-transactions/edit/:id',
                       icon: <SwapHorizIcon />,
                     },
                     {
@@ -104,7 +104,7 @@ function App() {
 
                       <Route path="/wrap-token-transactions">
                         <Route index element={<WrapTokenTransactionsList />} />
-                        <Route path="show/:id" element={<WrapTokenTransactionsShow />} />
+                        <Route path="edit/:id" element={<WrapTokenTransactionsEdit />} />
                       </Route>
 
                       <Route path="/safe-transactions">
