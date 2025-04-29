@@ -21,7 +21,8 @@ import routerBindings, {
 import axios from 'axios';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router';
 
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LockIcon from '@mui/icons-material/Lock';
 
@@ -36,6 +37,7 @@ import { SafeTransactionsList } from './pages/safe-transactions';
 import { SafeTransactionsShow } from './pages/safe-transactions/show';
 import { WrapTokenTransactionsList } from './pages/wrap-token-transactions';
 import { WrapTokenTransactionsEdit } from './pages/wrap-token-transactions/edit';
+import { TokensUnwrappedList } from './pages/tokens-unwrapped';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
@@ -64,7 +66,18 @@ function App() {
                       name: 'wrap-token-transactions',
                       list: '/wrap-token-transactions',
                       edit: '/wrap-token-transactions/edit/:id',
-                      icon: <SwapHorizIcon />,
+                      icon: <RotateRightIcon />,
+                      meta: {
+                        label: 'Wrapp transactions',
+                      },
+                    },
+                    {
+                      name: 'tokens-unwrapped',
+                      list: '/tokens-unwrapped',
+                      icon: <RotateLeftIcon />,
+                      meta: {
+                        label: 'Unwrapp transactions',
+                      },
                     },
                     {
                       name: 'safe transaction',
@@ -105,6 +118,10 @@ function App() {
                       <Route path="/wrap-token-transactions">
                         <Route index element={<WrapTokenTransactionsList />} />
                         <Route path="edit/:id" element={<WrapTokenTransactionsEdit />} />
+                      </Route>
+
+                      <Route path="/tokens-unwrapped">
+                        <Route index element={<TokensUnwrappedList />} />
                       </Route>
 
                       <Route path="/safe-transactions">
