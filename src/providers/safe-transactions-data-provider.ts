@@ -11,8 +11,6 @@ import { SAFE_API_BASE_URL, SAFE_ADDRESS } from '../config';
 
 export type SafeTransaction = SafeMultisigTransactionListResponse['results'][0];
 
-const transactionCache: Record<string, SafeTransaction> = {};
-
 export const safeTransactionsDataProvider: DataProvider = {
   getList: async <TData = SafeTransaction>({
     pagination,
@@ -20,34 +18,22 @@ export const safeTransactionsDataProvider: DataProvider = {
     const { current = 1, pageSize = 10 } = pagination || {};
     const offset = (current - 1) * pageSize;
 
-    try {
-      const response = await axios.get<SafeMultisigTransactionListResponse>(
-        `${SAFE_API_BASE_URL}/safes/${SAFE_ADDRESS}/multisig-transactions/`,
-        {
-          params: {
-            limit: pageSize,
-            offset: offset,
-          },
-        }
-      );
+    const response = await axios.get<SafeMultisigTransactionListResponse>(
+      `${SAFE_API_BASE_URL}/safes/${SAFE_ADDRESS}/multisig-transactions/`,
+      {
+        params: {
+          limit: pageSize,
+          offset: offset,
+        },
+      }
+    );
 
-      const { results, count } = response.data;
+    const { results, count } = response.data;
 
-      results.forEach((transaction) => {
-        transactionCache[transaction.safeTxHash] = transaction;
-      });
-
-      return {
-        data: results as unknown as TData[],
-        total: count,
-      };
-    } catch (error) {
-      console.error('Error fetching Safe transactions:', error);
-      return {
-        data: [],
-        total: 0,
-      };
-    }
+    return {
+      data: results as unknown as TData[],
+      total: count,
+    };
   },
 
   getOne: async <TData = SafeTransaction>({
@@ -55,15 +41,9 @@ export const safeTransactionsDataProvider: DataProvider = {
   }: {
     id: BaseKey;
   }): Promise<GetOneResponse<TData>> => {
-    const transaction = transactionCache[id];
+    const { data } = await axios.get<TData>(`${SAFE_API_BASE_URL}/multisig-transactions/${id}`);
 
-    if (!transaction) {
-      throw new Error(`Transaction with ID ${id} not found in cache`);
-    }
-
-    return {
-      data: transaction as unknown as TData,
-    };
+    return { data };
   },
 
   create: async () => {
