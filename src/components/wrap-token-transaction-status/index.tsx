@@ -10,10 +10,17 @@ export const WrapTokenTransactionStatus = ({
   size = 'small',
 }: WrapTokenTransactionStatusProps) => {
   const { label, color } = useMemo(() => {
+    if (status === WrapTokenTransactionEntity.status.SAFE_TRANSACTION_CREATED) {
+      return {
+        label: 'Safe Tx Created',
+        color: 'success',
+      };
+    }
+
     if (status === WrapTokenTransactionEntity.status.TOKENS_RECEIVED) {
       return {
         label: 'Tokens received',
-        color: 'success',
+        color: 'primary',
       };
     }
 
@@ -25,7 +32,7 @@ export const WrapTokenTransactionStatus = ({
     }
 
     return {
-      label: 'Waiting for tokens',
+      label: 'Created',
       color: 'default',
     };
   }, [status]);

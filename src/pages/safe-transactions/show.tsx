@@ -54,7 +54,7 @@ export const SafeTransactionsShow = () => {
   return (
     <Show
       isLoading={isLoading}
-      title="Sign Transaction"
+      title="Back"
       headerButtons={() => (
         <>
           <Button

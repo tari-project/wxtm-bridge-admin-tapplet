@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Edit } from '@refinedev/mui';
 import { useForm } from '@refinedev/react-hook-form';
 import { Controller } from 'react-hook-form';
+import { useNavigation } from '@refinedev/core';
 
 import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
 
@@ -13,6 +14,7 @@ import { useProposeMintTransaction } from '../../hooks/use-propose-mint-transact
 export const WrapTokenTransactionsEdit = () => {
   const [isTokenAmountEditable, setIsTokenAmountEditable] = useState(false);
   const { proposeMintTransaction, loading } = useProposeMintTransaction();
+  const { push } = useNavigation();
 
   const {
     saveButtonProps,
@@ -25,14 +27,11 @@ export const WrapTokenTransactionsEdit = () => {
 
   const transaction = query?.data?.data;
 
-  const handleProposeMintTransaction = useCallback(() => {
-    if (transaction) {
-      proposeMintTransaction({ toAddress: transaction.to, tokenAmount: transaction.tokenAmount });
-    }
-  }, [transaction, proposeMintTransaction]);
-
   const canUpdate = useMemo(() => {
-    return transaction?.status !== WrapTokenTransactionEntity.status.TOKENS_RECEIVED;
+    return (
+      transaction?.status !== WrapTokenTransactionEntity.status.TOKENS_RECEIVED &&
+      transaction?.status !== WrapTokenTransactionEntity.status.SAFE_TRANSACTION_CREATED
+    );
   }, [transaction]);
 
   const disabledSaveButtonProps = useMemo(
@@ -43,20 +42,56 @@ export const WrapTokenTransactionsEdit = () => {
     [saveButtonProps, canUpdate]
   );
 
+  const canNavigateToSafeTransaction = useMemo(() => {
+    return !!transaction?.safeTxHash;
+  }, [transaction]);
+
+  const canProposeSafeTransaction = useMemo(() => {
+    return transaction?.status === WrapTokenTransactionEntity.status.TOKENS_RECEIVED;
+  }, [transaction]);
+
+  const handleProposeMintTransaction = useCallback(() => {
+    if (transaction) {
+      proposeMintTransaction({
+        toAddress: transaction.to,
+        tokenAmount: transaction.tokenAmount,
+        wrapTokenTransactionId: transaction.id,
+      });
+    }
+  }, [transaction, proposeMintTransaction]);
+
+  const navigateToSafeTransaction = useCallback(() => {
+    if (transaction) {
+      push(`/safe-transactions/show/${transaction.safeTxHash}`);
+    }
+  }, [transaction, push]);
+
   return (
     <Edit
       isLoading={formLoading}
       saveButtonProps={disabledSaveButtonProps}
+      title="Back"
       headerButtons={
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleProposeMintTransaction}
-          loading={loading}
-          disabled={canUpdate}
-        >
-          Propose Transaction
-        </Button>
+        <>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={navigateToSafeTransaction}
+            disabled={!canNavigateToSafeTransaction}
+          >
+            Show Safe Transaction
+          </Button>
+
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleProposeMintTransaction}
+            loading={loading}
+            disabled={!canProposeSafeTransaction}
+          >
+            Propose Safe Transaction
+          </Button>
+        </>
       }
     >
       {transaction && (
@@ -78,6 +113,18 @@ export const WrapTokenTransactionsEdit = () => {
             slotProps={{ input: { readOnly: true } }}
           />
 
+          <TextField
+            label="Safe Nonce"
+            value={transaction.safeNonce || '-'}
+            slotProps={{ input: { readOnly: true } }}
+          />
+
+          <TextField
+            label="Safe Transaction Hash"
+            value={transaction.safeTxHash || '-'}
+            slotProps={{ input: { readOnly: true } }}
+          />
+
           <Box>
             <Controller
               name="tokenAmount"
@@ -89,7 +136,7 @@ export const WrapTokenTransactionsEdit = () => {
                   label="Token Amount"
                   margin="normal"
                   required
-                  disabled={!isTokenAmountEditable}
+                  disabled={!canUpdate || !isTokenAmountEditable}
                   error={!!errors.tokenAmount}
                   helperText={errors.tokenAmount?.message as string}
                   fullWidth
@@ -102,7 +149,7 @@ export const WrapTokenTransactionsEdit = () => {
               color="info"
               onClick={() => setIsTokenAmountEditable(!isTokenAmountEditable)}
               sx={{ mt: 1 }}
-              disabled={isTokenAmountEditable}
+              disabled={!canUpdate}
             >
               Allow Edit
             </Button>
@@ -112,7 +159,13 @@ export const WrapTokenTransactionsEdit = () => {
             control={control}
             defaultValue={transaction?.status}
             render={({ field }) => (
-              <Select {...field} fullWidth label="Status" error={!!errors.status}>
+              <Select
+                {...field}
+                fullWidth
+                label="Status"
+                disabled={!canUpdate}
+                error={!!errors.status}
+              >
                 <MenuItem value={WrapTokenTransactionEntity.status.TOKENS_SENT}>
                   Tokens Sent
                 </MenuItem>

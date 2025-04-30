@@ -22,6 +22,12 @@ export const WrapTokenTransactionsList = () => {
   const columns = React.useMemo<GridColDef<WrapTokenTransactionEntity>[]>(
     () => [
       {
+        field: 'safeNonce',
+        headerName: 'Safe Nonce:',
+        display: 'flex',
+        flex: 0.3,
+      },
+      {
         field: 'paymentId',
         headerName: 'Payment ID:',
         display: 'flex',

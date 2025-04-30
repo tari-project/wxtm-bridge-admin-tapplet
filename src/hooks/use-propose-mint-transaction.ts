@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigation, useNotification } from '@refinedev/core';
+import { useNavigation, useNotification, useUpdate } from '@refinedev/core';
 import { useAccount } from 'wagmi';
 
 import { WXTM__factory } from '@tari-project/wxtm-bridge-contracts';
@@ -13,13 +13,16 @@ export const useProposeMintTransaction = () => {
   const { push } = useNavigation();
   const { open } = useNotification();
   const { address } = useAccount();
+  const { mutate } = useUpdate();
 
   const proposeMintTransaction = async ({
     toAddress,
     tokenAmount,
+    wrapTokenTransactionId,
   }: {
     toAddress: string;
     tokenAmount: string;
+    wrapTokenTransactionId: number;
   }) => {
     setLoading(true);
 
@@ -55,6 +58,15 @@ export const useProposeMintTransaction = () => {
         safeTxHash,
         senderAddress: address || '',
         senderSignature: senderSignature.data,
+      });
+
+      mutate({
+        resource: 'wrap-token-transactions',
+        id: wrapTokenTransactionId,
+        values: {
+          safeTxHash,
+          safeNonce: safeTransaction.data.nonce,
+        },
       });
 
       setLoading(false);

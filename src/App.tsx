@@ -68,7 +68,7 @@ function App() {
                       edit: '/wrap-token-transactions/edit/:id',
                       icon: <RotateRightIcon />,
                       meta: {
-                        label: 'Wrapp transactions',
+                        label: 'Wrapp token',
                       },
                     },
                     {
@@ -76,7 +76,7 @@ function App() {
                       list: '/tokens-unwrapped',
                       icon: <RotateLeftIcon />,
                       meta: {
-                        label: 'Unwrapp transactions',
+                        label: 'Unwrapp token',
                       },
                     },
                     {
