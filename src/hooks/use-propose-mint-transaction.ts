@@ -6,6 +6,7 @@ import { WXTM__factory } from '@tari-project/wxtm-bridge-contracts';
 
 import { useSafe } from './use-safe';
 import { SAFE_ADDRESS, WXTM_TOKEN_ADDRESS } from '../config';
+import { convertWxtmTokenTo18Decimals } from '../helpers/convert-wxtm-token-to-18-decimals';
 
 export const useProposeMintTransaction = () => {
   const [loading, setLoading] = useState(false);
@@ -17,23 +18,24 @@ export const useProposeMintTransaction = () => {
 
   const proposeMintTransaction = async ({
     toAddress,
-    tokenAmount,
+    wxtmTokenAmount,
     wrapTokenTransactionId,
   }: {
     toAddress: string;
-    tokenAmount: string;
+    wxtmTokenAmount: string;
     wrapTokenTransactionId: number;
   }) => {
     setLoading(true);
-
     try {
       const safe = await initSafe();
       const api = initApi();
       const nextNonce = await api.getNextNonce(SAFE_ADDRESS);
 
+      const wxtmTokenAmount18Decimals = convertWxtmTokenTo18Decimals({ wxtmTokenAmount });
+
       const data = WXTM__factory.createInterface().encodeFunctionData('mint', [
         toAddress,
-        tokenAmount,
+        wxtmTokenAmount18Decimals,
       ]);
 
       const safeTransaction = await safe.createTransaction({

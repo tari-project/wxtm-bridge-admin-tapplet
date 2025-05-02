@@ -54,7 +54,7 @@ export const WrapTokenTransactionsEdit = () => {
     if (transaction) {
       proposeMintTransaction({
         toAddress: transaction.to,
-        tokenAmount: transaction.tokenAmount,
+        wxtmTokenAmount: transaction.tokenAmount,
         wrapTokenTransactionId: transaction.id,
       });
     }

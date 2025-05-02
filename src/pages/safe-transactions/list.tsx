@@ -1,7 +1,8 @@
 import React from 'react';
+import { utils } from 'ethers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { List, useDataGrid } from '@refinedev/mui';
-import { Chip } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
 import { useNavigation } from '@refinedev/core';
 
 import { SafeTransaction } from '../../providers/safe-transactions-data-provider';
@@ -38,7 +39,7 @@ export const SafeTransactionsList = () => {
         field: 'nonce',
         headerName: 'Nonce:',
         display: 'flex',
-        flex: 1,
+        flex: 0.3,
         filterable: false,
         sortable: false,
       },
@@ -46,7 +47,7 @@ export const SafeTransactionsList = () => {
         field: '1',
         headerName: 'Operation:',
         display: 'flex',
-        flex: 1,
+        flex: 0.4,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => (
@@ -57,20 +58,46 @@ export const SafeTransactionsList = () => {
           />
         ),
       },
+
       {
         field: '2',
-        headerName: 'Signatures:',
+        headerName: 'To Address:',
         display: 'flex',
         flex: 1,
+        filterable: false,
+        sortable: false,
+        renderCell: ({ row }) => {
+          const address = decodeWXTMTokenCalldata({ data: row.data }).parameters[0].value;
+          return <BlockchainExplorerLink address={address}>{address}</BlockchainExplorerLink>;
+        },
+      },
+
+      {
+        field: '3',
+        headerName: 'Token Amount:',
+        display: 'flex',
+        flex: 1,
+        filterable: false,
+        sortable: false,
+        renderCell: ({ row }) => {
+          const amount18Decimals = decodeWXTMTokenCalldata({ data: row.data }).parameters[1].value;
+          return <Typography>{utils.formatUnits(amount18Decimals, 18)}</Typography>;
+        },
+      },
+      {
+        field: '4',
+        headerName: 'Signatures:',
+        display: 'flex',
+        flex: 0.4,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => `${row.confirmationsRequired}/${row.confirmations?.length || 0}`,
       },
       {
-        field: '3',
+        field: '5',
         headerName: 'Status:  ',
         display: 'flex',
-        flex: 1,
+        flex: 0.5,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
@@ -82,7 +109,7 @@ export const SafeTransactionsList = () => {
         headerName: 'Submitted At:',
         type: 'string',
         display: 'flex',
-        flex: 1,
+        flex: 0.7,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
@@ -94,7 +121,7 @@ export const SafeTransactionsList = () => {
         headerName: 'Executed At:',
         type: 'string',
         display: 'flex',
-        flex: 1,
+        flex: 0.7,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {

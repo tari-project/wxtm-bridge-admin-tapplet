@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { waitForTransactionReceipt } from '@wagmi/core';
-import { useNotification, useNavigation } from '@refinedev/core';
+import { useNotification } from '@refinedev/core';
 
 import { wagmiConfig } from '../config/wagmi-config';
 import { SafeTransaction } from '../providers/safe-transactions-data-provider';
@@ -12,7 +12,6 @@ export const useExecuteTransaction = () => {
   const [loading, setLoading] = useState(false);
   const { initSafe } = useSafe();
   const { open } = useNotification();
-  const { push } = useNavigation();
 
   const executeTransaction = async (transaction: SafeTransaction) => {
     setLoading(true);
@@ -38,8 +37,6 @@ export const useExecuteTransaction = () => {
         description: 'Success',
         message: 'Transaction executed successfully',
       });
-
-      push('/safe-transactions');
     } catch (e) {
       setLoading(false);
       open?.({
