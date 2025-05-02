@@ -2,12 +2,11 @@ import { useState } from 'react';
 
 import { SafeTransaction } from '../providers/safe-transactions-data-provider';
 import { useSafe } from './use-safe';
-import { useNavigation, useNotification } from '@refinedev/core';
+import { useNotification } from '@refinedev/core';
 
 export const useSignTransaction = () => {
   const [loading, setLoading] = useState(false);
   const { initApi, initSafe } = useSafe();
-  const { push } = useNavigation();
   const { open } = useNotification();
 
   const signTransaction = async ({ safeTxHash }: SafeTransaction) => {
@@ -27,8 +26,6 @@ export const useSignTransaction = () => {
         description: 'Success',
         message: 'Transaction signed successfully',
       });
-
-      push('/safe-transactions');
     } catch (e) {
       setLoading(false);
 

@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemText,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import { useShow } from '@refinedev/core';
@@ -18,26 +19,32 @@ import { useExecuteTransaction } from '../../hooks/use-execute-transaction';
 import { SafeTransactionStatus } from '../../components/safe-transaction-status';
 import CallDataView from '../../components/call-data-view';
 import { decodeWXTMTokenCalldata } from '../../helpers/decode-wxtm-token-calldata';
+import { utils } from 'ethers';
 
 export const SafeTransactionsShow = () => {
-  const { query } = useShow<SafeTransaction>({});
+  const {
+    query: { data, isLoading, refetch },
+  } = useShow<SafeTransaction>({});
   const { signTransaction, loading } = useSignTransaction();
   const { executeTransaction, loading: executingTransaction } = useExecuteTransaction();
 
-  const { data, isLoading } = query;
   const transaction = data?.data;
 
   const handleSignTransaction = useCallback(() => {
     if (transaction) {
-      signTransaction(transaction);
+      signTransaction(transaction).then(() => {
+        refetch();
+      });
     }
-  }, [transaction, signTransaction]);
+  }, [transaction, signTransaction, refetch]);
 
   const handleExecuteTransaction = useCallback(() => {
     if (transaction) {
-      executeTransaction(transaction);
+      executeTransaction(transaction).then(() => {
+        refetch();
+      });
     }
-  }, [transaction, executeTransaction]);
+  }, [transaction, executeTransaction, refetch]);
 
   const allSignaturesCollected = useMemo(() => {
     return transaction?.confirmationsRequired === transaction?.confirmations?.length;
@@ -46,6 +53,10 @@ export const SafeTransactionsShow = () => {
   const canExecuteTransaction = useMemo(() => {
     return allSignaturesCollected && !transaction?.isExecuted;
   }, [transaction, allSignaturesCollected]);
+
+  const decodedData = useMemo(() => {
+    return decodeWXTMTokenCalldata({ data: transaction?.data });
+  }, [transaction]);
 
   if (!transaction) {
     return null;
@@ -79,7 +90,7 @@ export const SafeTransactionsShow = () => {
         </>
       )}
     >
-      <Stack gap={1} mt={2}>
+      <Stack gap={4} mt={2}>
         <SafeTransactionStatus transaction={transaction} />
 
         {transaction.confirmations && (
@@ -101,7 +112,19 @@ export const SafeTransactionsShow = () => {
           </List>
         )}
 
-        <CallDataView decodedData={decodeWXTMTokenCalldata({ data: transaction.data })} />
+        <TextField
+          label="To Address"
+          value={decodedData.parameters[0].value}
+          slotProps={{ input: { readOnly: true } }}
+        />
+
+        <TextField
+          label="Token Amount"
+          value={utils.formatUnits(decodedData.parameters[1].value, 18)}
+          slotProps={{ input: { readOnly: true } }}
+        />
+
+        <CallDataView decodedData={decodedData} />
       </Stack>
     </Show>
   );
