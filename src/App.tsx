@@ -38,6 +38,7 @@ import { SafeTransactionsShow } from './pages/safe-transactions/show';
 import { WrapTokenTransactionsList } from './pages/wrap-token-transactions';
 import { WrapTokenTransactionsEdit } from './pages/wrap-token-transactions/edit';
 import { TokensUnwrappedList } from './pages/tokens-unwrapped';
+import { TokensUnwrappedEdit } from './pages/tokens-unwrapped/edit';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
@@ -74,6 +75,7 @@ function App() {
                     {
                       name: 'tokens-unwrapped',
                       list: '/tokens-unwrapped',
+                      edit: '/tokens-unwrapped/edit/:id',
                       icon: <RotateLeftIcon />,
                       meta: {
                         label: 'Unwrapp token',
@@ -122,6 +124,7 @@ function App() {
 
                       <Route path="/tokens-unwrapped">
                         <Route index element={<TokensUnwrappedList />} />
+                        <Route path="edit/:id" element={<TokensUnwrappedEdit />} />
                       </Route>
 
                       <Route path="/safe-transactions">

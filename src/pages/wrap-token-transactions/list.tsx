@@ -14,6 +14,14 @@ import { TruncatedAddress } from '../../components/truncated-address';
 
 export const WrapTokenTransactionsList = () => {
   const { dataGridProps } = useDataGrid({
+    sorters: {
+      initial: [
+        {
+          field: 'createdAt',
+          order: 'desc',
+        },
+      ],
+    },
     syncWithLocation: true,
   });
 

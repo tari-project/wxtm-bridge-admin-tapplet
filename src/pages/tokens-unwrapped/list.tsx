@@ -3,17 +3,29 @@ import { List, useDataGrid } from '@refinedev/mui';
 import React from 'react';
 import { utils } from 'ethers';
 import { Typography } from '@mui/material';
+import { useNavigation } from '@refinedev/core';
 
 import { TokensUnwrappedEntity } from '@tari-project/wxtm-bridge-backend-api';
 
 import { BlockchainExplorerLink } from '../../components/blockchain-explorer-link';
 import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
+import { TokensUnwrappedStatus } from '../../components/tokens-unwrapped-status';
 
 export const TokensUnwrappedList = () => {
   const { dataGridProps } = useDataGrid({
+    sorters: {
+      initial: [
+        {
+          field: 'createdAt',
+          order: 'desc',
+        },
+      ],
+    },
     syncWithLocation: true,
   });
+
+  const { push } = useNavigation();
 
   const columns = React.useMemo<GridColDef<TokensUnwrappedEntity>[]>(
     () => [
@@ -49,7 +61,18 @@ export const TokensUnwrappedList = () => {
         headerAlign: 'right',
         flex: 0.4,
         renderCell: ({ row }) => {
-          return <Typography>{utils.formatUnits(row.amount, 6)}</Typography>;
+          return <Typography>{utils.formatUnits(row.amount, 18)}</Typography>;
+        },
+      },
+
+      {
+        field: 'status',
+        headerName: 'Status:',
+        display: 'flex',
+        justifyContent: 'center',
+        flex: 0.8,
+        renderCell: ({ row }) => {
+          return <TokensUnwrappedStatus status={row.status} />;
         },
       },
       {
@@ -85,7 +108,13 @@ export const TokensUnwrappedList = () => {
 
   return (
     <List>
-      <DataGrid {...dataGridProps} columns={columns} />
+      <DataGrid
+        {...dataGridProps}
+        columns={columns}
+        onRowClick={(params) => {
+          push(`/tokens-unwrapped/edit/${params.row.id}`);
+        }}
+      />
     </List>
   );
 };
