@@ -61,13 +61,35 @@ export const WrapTokenTransactionsList = () => {
       },
       {
         field: 'tokenAmount',
-        headerName: 'Tokens:',
+        headerName: 'Tokens Received:',
+        display: 'flex',
+        align: 'right',
+        headerAlign: 'right',
+        flex: 0.5,
+        renderCell: ({ row }) => {
+          return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
+        },
+      },
+      {
+        field: 'amountAfterFee',
+        headerName: 'Tokens to Mint:',
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
         flex: 0.4,
         renderCell: ({ row }) => {
-          return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
+          return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
+        },
+      },
+      {
+        field: 'feeAmount',
+        headerName: 'Fee:',
+        display: 'flex',
+        align: 'right',
+        headerAlign: 'right',
+        flex: 0.4,
+        renderCell: ({ row }) => {
+          return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
         },
       },
       {
@@ -75,7 +97,7 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Status:',
         display: 'flex',
         justifyContent: 'center',
-        flex: 0.8,
+        flex: 0.6,
         renderCell: ({ row }) => {
           return <WrapTokenTransactionStatus status={row.status} />;
         },
