@@ -1,12 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Box, Button, Select, Stack, TextField } from '@mui/material';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Box, Button, InputAdornment, Select, Stack, TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { Edit } from '@refinedev/mui';
 import { useForm } from '@refinedev/react-hook-form';
 import { Controller } from 'react-hook-form';
 import { useNavigation } from '@refinedev/core';
+import { utils } from 'ethers';
 
-import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
+import {
+  WrapTokenTransactionEntity,
+  UpdateWrapTokenTransactionDTO,
+} from '@tari-project/wxtm-bridge-backend-api';
 
 import { WrapTokenTransactionStatus } from '../../components/wrap-token-transaction-status';
 import { useProposeMintTransaction } from '../../hooks/use-propose-mint-transaction';
@@ -18,14 +22,33 @@ export const WrapTokenTransactionsEdit = () => {
 
   const {
     saveButtonProps,
-    refineCore: { formLoading, query },
+    refineCore: { formLoading, query, onFinish },
     control,
     formState: { errors },
+    handleSubmit,
+    setValue,
   } = useForm<WrapTokenTransactionEntity>({
     refineCoreProps: { redirect: false },
   });
 
   const transaction = query?.data?.data;
+
+  useEffect(() => {
+    if (transaction?.tokenAmount) {
+      setValue('tokenAmount', utils.formatUnits(transaction?.tokenAmount, 6));
+    }
+  }, [transaction?.tokenAmount, setValue]);
+
+  const onSubmit = useCallback(
+    (data: Pick<UpdateWrapTokenTransactionDTO, 'status' | 'tokenAmount'>) => {
+      if (data.tokenAmount) {
+        data.tokenAmount = utils.parseUnits(data.tokenAmount, 6).toString();
+      }
+
+      onFinish(data);
+    },
+    [onFinish]
+  );
 
   const canUpdate = useMemo(() => {
     return (
@@ -38,8 +61,9 @@ export const WrapTokenTransactionsEdit = () => {
     () => ({
       ...saveButtonProps,
       disabled: !canUpdate,
+      onClick: handleSubmit(onSubmit),
     }),
-    [saveButtonProps, canUpdate]
+    [saveButtonProps, canUpdate, handleSubmit, onSubmit]
   );
 
   const canNavigateToSafeTransaction = useMemo(() => {
@@ -54,7 +78,7 @@ export const WrapTokenTransactionsEdit = () => {
     if (transaction) {
       proposeMintTransaction({
         toAddress: transaction.to,
-        wxtmTokenAmount: transaction.tokenAmount,
+        wxtmTokenAmountAfterFee: transaction.amountAfterFee,
         wrapTokenTransactionId: transaction.id,
       });
     }
@@ -129,31 +153,63 @@ export const WrapTokenTransactionsEdit = () => {
             <Controller
               name="tokenAmount"
               control={control}
-              defaultValue={transaction?.tokenAmount}
+              rules={{
+                validate: (value) => {
+                  const decimalPlaces = value.split('.')[1]?.length || 0;
+                  return decimalPlaces <= 6 || 'Only 6 decimal places';
+                },
+                required: 'Token amount is required',
+              }}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Token Amount"
+                  label="Tokens Received"
                   margin="normal"
-                  required
+                  type="number"
                   disabled={!canUpdate || !isTokenAmountEditable}
                   error={!!errors.tokenAmount}
                   helperText={errors.tokenAmount?.message as string}
                   fullWidth
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Button
+                            variant="outlined"
+                            size="medium"
+                            color="info"
+                            onClick={() => setIsTokenAmountEditable(!isTokenAmountEditable)}
+                            disabled={!canUpdate}
+                          >
+                            Edit
+                          </Button>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                 />
               )}
             />
-            <Button
-              variant="outlined"
-              size="small"
-              color="info"
-              onClick={() => setIsTokenAmountEditable(!isTokenAmountEditable)}
-              sx={{ mt: 1 }}
-              disabled={!canUpdate}
-            >
-              Allow Edit
-            </Button>
           </Box>
+
+          <TextField
+            label="Fee %"
+            value={transaction.feePercentageBps / 100}
+            slotProps={{ input: { readOnly: true } }}
+          />
+
+          <TextField
+            label="Fee Amount"
+            value={`${utils.formatUnits(transaction.feeAmount, 6).toString()} wXTM`}
+            slotProps={{ input: { readOnly: true } }}
+          />
+
+          <TextField
+            label="Amount To Send"
+            value={`${utils.formatUnits(transaction.amountAfterFee, 6).toString()} wXTM`}
+            slotProps={{ input: { readOnly: true } }}
+          />
+
           <Controller
             name="status"
             control={control}

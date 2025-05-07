@@ -18,11 +18,11 @@ export const useProposeMintTransaction = () => {
 
   const proposeMintTransaction = async ({
     toAddress,
-    wxtmTokenAmount,
+    wxtmTokenAmountAfterFee,
     wrapTokenTransactionId,
   }: {
     toAddress: string;
-    wxtmTokenAmount: string;
+    wxtmTokenAmountAfterFee: string;
     wrapTokenTransactionId: number;
   }) => {
     setLoading(true);
@@ -31,7 +31,9 @@ export const useProposeMintTransaction = () => {
       const api = initApi();
       const nextNonce = await api.getNextNonce(SAFE_ADDRESS);
 
-      const wxtmTokenAmount18Decimals = convertWxtmTokenTo18Decimals({ wxtmTokenAmount });
+      const wxtmTokenAmount18Decimals = convertWxtmTokenTo18Decimals({
+        wxtmTokenAmount: wxtmTokenAmountAfterFee,
+      });
 
       const data = WXTM__factory.createInterface().encodeFunctionData('mint', [
         toAddress,

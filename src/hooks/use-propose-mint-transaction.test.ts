@@ -65,7 +65,7 @@ vi.mock('../helpers/convert-wxtm-token-to-18-decimals', () => ({
 describe('useProposeMintTransaction', () => {
   const mockParams = {
     toAddress: '0xRecipientAddress',
-    wxtmTokenAmount: '1000000',
+    wxtmTokenAmountAfterFee: '1000000',
     wrapTokenTransactionId: 123,
   };
 
@@ -85,7 +85,7 @@ describe('useProposeMintTransaction', () => {
     expect(result.current.loading).toBe(false);
 
     expect(convertWxtmTokenTo18Decimals).toHaveBeenCalledWith({
-      wxtmTokenAmount: mockParams.wxtmTokenAmount,
+      wxtmTokenAmount: mockParams.wxtmTokenAmountAfterFee,
     });
 
     expect(WXTM__factory.createInterface().encodeFunctionData).toHaveBeenCalledWith('mint', [
