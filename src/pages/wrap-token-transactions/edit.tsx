@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Button, InputAdornment, Select, Stack, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  Select,
+  Stack,
+  TextField,
+} from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import { Edit } from '@refinedev/mui';
 import { useForm } from '@refinedev/react-hook-form';
@@ -215,20 +224,20 @@ export const WrapTokenTransactionsEdit = () => {
             control={control}
             defaultValue={transaction?.status}
             render={({ field }) => (
-              <Select
-                {...field}
-                fullWidth
-                label="Status"
-                disabled={!canUpdate}
-                error={!!errors.status}
-              >
-                <MenuItem value={WrapTokenTransactionEntity.status.TOKENS_SENT}>
-                  Tokens Sent
-                </MenuItem>
-                <MenuItem value={WrapTokenTransactionEntity.status.TOKENS_RECEIVED}>
-                  Tokens Received
-                </MenuItem>
-              </Select>
+              <FormControl fullWidth error={!!errors.status}>
+                <InputLabel id="status-select-label">Status</InputLabel>
+                <Select
+                  {...field}
+                  labelId="status-select-label"
+                  id="status-select"
+                  label="Status"
+                  disabled={!canUpdate}
+                >
+                  <MenuItem value={WrapTokenTransactionEntity.status.TOKENS_RECEIVED}>
+                    Tokens Received
+                  </MenuItem>
+                </Select>
+              </FormControl>
             )}
           />
         </Stack>
