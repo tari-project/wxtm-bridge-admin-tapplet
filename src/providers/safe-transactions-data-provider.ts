@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   BaseKey,
   DataProvider,
@@ -6,10 +5,13 @@ import {
   GetListResponse,
   GetOneResponse,
 } from '@refinedev/core';
-import { SafeMultisigTransactionListResponse } from '@safe-global/api-kit';
-import { SAFE_API_BASE_URL, SAFE_ADDRESS } from '../config';
+import SafeApiKit, { SafeMultisigTransactionListResponse } from '@safe-global/api-kit';
+
+import { SAFE_ADDRESS, NETWORK_ID } from '../config';
 
 export type SafeTransaction = SafeMultisigTransactionListResponse['results'][0];
+
+const apiKit = new SafeApiKit({ chainId: BigInt(NETWORK_ID) });
 
 export const safeTransactionsDataProvider: DataProvider = {
   getList: async <TData = SafeTransaction>({
@@ -18,17 +20,10 @@ export const safeTransactionsDataProvider: DataProvider = {
     const { current = 1, pageSize = 10 } = pagination || {};
     const offset = (current - 1) * pageSize;
 
-    const response = await axios.get<SafeMultisigTransactionListResponse>(
-      `${SAFE_API_BASE_URL}/safes/${SAFE_ADDRESS}/multisig-transactions/`,
-      {
-        params: {
-          limit: pageSize,
-          offset: offset,
-        },
-      }
-    );
-
-    const { results, count } = response.data;
+    const { results, count } = await apiKit.getMultisigTransactions(SAFE_ADDRESS, {
+      limit: pageSize,
+      offset,
+    });
 
     return {
       data: results as unknown as TData[],
@@ -41,9 +36,9 @@ export const safeTransactionsDataProvider: DataProvider = {
   }: {
     id: BaseKey;
   }): Promise<GetOneResponse<TData>> => {
-    const { data } = await axios.get<TData>(`${SAFE_API_BASE_URL}/multisig-transactions/${id}`);
+    const tx = await apiKit.getTransaction(id.toString());
 
-    return { data };
+    return { data: tx as unknown as TData };
   },
 
   create: async () => {
