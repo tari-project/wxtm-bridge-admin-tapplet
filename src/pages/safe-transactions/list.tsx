@@ -54,7 +54,7 @@ export const SafeTransactionsList = () => {
           <Chip
             sx={{ width: 60 }}
             size="small"
-            label={decodeWXTMTokenCalldata({ data: row.data })?.method}
+            label={decodeWXTMTokenCalldata({ data: row.data })?.method || 'other'}
           />
         ),
       },
@@ -67,7 +67,8 @@ export const SafeTransactionsList = () => {
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
-          const address = decodeWXTMTokenCalldata({ data: row.data }).parameters[0].value;
+          const address =
+            decodeWXTMTokenCalldata({ data: row.data })?.parameters[0]?.value || 'N/A';
           return <BlockchainExplorerLink address={address}>{address}</BlockchainExplorerLink>;
         },
       },
@@ -80,8 +81,14 @@ export const SafeTransactionsList = () => {
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
-          const amount18Decimals = decodeWXTMTokenCalldata({ data: row.data }).parameters[1].value;
-          return <Typography>{utils.formatUnits(amount18Decimals, 18)}</Typography>;
+          const amount18Decimals = decodeWXTMTokenCalldata({ data: row.data })?.parameters[1]
+            ?.value;
+
+          if (amount18Decimals) {
+            return <Typography>{utils.formatUnits(amount18Decimals, 18)}</Typography>;
+          } else {
+            return <Typography>N/A</Typography>;
+          }
         },
       },
       {
