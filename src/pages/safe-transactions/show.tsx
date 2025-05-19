@@ -114,13 +114,17 @@ export const SafeTransactionsShow = () => {
 
         <TextField
           label="To Address"
-          value={decodedData.parameters[0].value}
+          value={decodedData?.parameters[0]?.value || 'N/A'}
           slotProps={{ input: { readOnly: true } }}
         />
 
         <TextField
           label="Token Amount"
-          value={utils.formatUnits(decodedData.parameters[1].value, 18)}
+          value={
+            decodedData?.parameters[1]?.value
+              ? utils.formatUnits(decodedData.parameters[1].value, 18)
+              : 'N/A'
+          }
           slotProps={{ input: { readOnly: true } }}
         />
 
