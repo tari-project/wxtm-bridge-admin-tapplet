@@ -7,7 +7,6 @@ import { Typography } from '@mui/material';
 
 import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
 
-import { BlockchainExplorerLink } from '../../components/blockchain-explorer-link';
 import { WrapTokenTransactionStatus } from '../../components/wrap-token-transaction-status';
 import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
@@ -40,6 +39,9 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Payment ID:',
         display: 'flex',
         flex: 1,
+        renderCell: ({ row }) => {
+          return <TruncatedAddress address={row.paymentId} />;
+        },
       },
       {
         field: 'from',
@@ -56,7 +58,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         flex: 1,
         renderCell: ({ row }) => {
-          return <BlockchainExplorerLink address={row.to}>{row.to}</BlockchainExplorerLink>;
+          return <TruncatedAddress address={row.to} />;
         },
       },
       {
@@ -65,7 +67,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
-        flex: 0.5,
+        flex: 0.3,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
         },
@@ -123,6 +125,14 @@ export const WrapTokenTransactionsList = () => {
         columns={columns}
         onRowClick={(params) => {
           push(`/wrap-token-transactions/edit/${params.row.id}`);
+        }}
+        getRowClassName={(params) => {
+          return params.row.error ? 'error-row' : '';
+        }}
+        sx={{
+          '& .error-row': {
+            backgroundColor: '#ffebee',
+          },
         }}
       />
     </List>
