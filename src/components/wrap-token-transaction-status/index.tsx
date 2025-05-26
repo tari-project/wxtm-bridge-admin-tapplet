@@ -10,31 +10,43 @@ export const WrapTokenTransactionStatus = ({
   size = 'small',
 }: WrapTokenTransactionStatusProps) => {
   const { label, color } = useMemo(() => {
-    if (status === WrapTokenTransactionEntity.status.SAFE_TRANSACTION_CREATED) {
-      return {
-        label: 'Safe Tx Created',
-        color: 'success',
-      };
+    switch (status) {
+      case WrapTokenTransactionEntity.status.TOKENS_SENT:
+        return {
+          label: 'Tokens sent',
+          color: 'default',
+        };
+      case WrapTokenTransactionEntity.status.TOKENS_RECEIVED:
+        return {
+          label: 'Tokens received',
+          color: 'info',
+        };
+      case WrapTokenTransactionEntity.status.CREATING_SAFE_TRANSACTION:
+        return {
+          label: 'Creating Safe Tx',
+          color: 'warning',
+        };
+      case WrapTokenTransactionEntity.status.SAFE_TRANSACTION_CREATED:
+        return {
+          label: 'Safe Tx Created',
+          color: 'secondary',
+        };
+      case WrapTokenTransactionEntity.status.EXECUTING_SAFE_TRANSACTION:
+        return {
+          label: 'Executing Safe Tx',
+          color: 'warning',
+        };
+      case WrapTokenTransactionEntity.status.SAFE_TRANSACTION_EXECUTED:
+        return {
+          label: 'Safe Tx Executed',
+          color: 'success',
+        };
+      default:
+        return {
+          label: status || 'Unknown',
+          color: 'default',
+        };
     }
-
-    if (status === WrapTokenTransactionEntity.status.TOKENS_RECEIVED) {
-      return {
-        label: 'Tokens received',
-        color: 'primary',
-      };
-    }
-
-    if (status === WrapTokenTransactionEntity.status.TOKENS_SENT) {
-      return {
-        label: 'Tokens sent',
-        color: 'warning',
-      };
-    }
-
-    return {
-      label: 'Created',
-      color: 'default',
-    };
   }, [status]);
 
   return <Chip label={label} color={color as ChipProps['color']} size={size} sx={{ width: 150 }} />;
