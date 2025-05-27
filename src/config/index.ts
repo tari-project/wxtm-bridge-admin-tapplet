@@ -7,4 +7,3 @@ export const {
   VITE_WXTM_TOKEN_ADDRESS: WXTM_TOKEN_ADDRESS,
   VITE_NETWORK_ID: NETWORK_ID,
 } = import.meta.env;
-
