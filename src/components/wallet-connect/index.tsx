@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Typography, Menu, MenuItem, CircularProgress } from '@mui/material';
 import { useDisconnect, useAccountEffect, useAccount } from 'wagmi';
 import { ConnectKitButton, ChainIcon } from 'connectkit';
+import { useTheme } from '@mui/material/styles';
 
 const BUTTON_WIDTH = 200;
 
@@ -10,6 +11,7 @@ export const WalletConnect = () => {
   const { disconnect } = useDisconnect();
   const [address, setAddress] = useState<string | undefined>();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const theme = useTheme();
 
   const disconnectWallet = useCallback(() => {
     disconnect();
@@ -55,7 +57,7 @@ export const WalletConnect = () => {
                 type="button"
                 style={{
                   display: 'flex',
-                  backgroundColor: '#f9f9f9',
+                  backgroundColor: theme.palette.background.paper,
                   width: BUTTON_WIDTH,
                 }}
                 onClick={show}
@@ -87,7 +89,7 @@ export const WalletConnect = () => {
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(e.currentTarget)}
             style={{
               display: 'flex',
-              backgroundColor: '#f9f9f9',
+              backgroundColor: theme.palette.background.paper,
               width: BUTTON_WIDTH,
             }}
           >
@@ -112,7 +114,7 @@ export const WalletConnect = () => {
                 width: BUTTON_WIDTH,
                 p: 0,
                 justifyContent: 'center',
-                backgroundColor: '#f9f9f9',
+                backgroundColor: theme.palette.background.paper,
               }}
               onClick={disconnectWallet}
             >
