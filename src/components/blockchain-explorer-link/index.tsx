@@ -1,6 +1,7 @@
 import Link from '@mui/material/Link';
 import { useCallback } from 'react';
 import { useAccount } from 'wagmi';
+import { useTheme } from '@mui/material/styles';
 
 import { BlockchainExplorerLinkProps, BlockchainExplorerUrlParams } from './types';
 import { BLOCKCHAIN_EXPLORERS } from './const';
@@ -12,6 +13,7 @@ export const BlockchainExplorerLink = ({
   children,
 }: BlockchainExplorerLinkProps) => {
   const { chainId } = useAccount();
+  const theme = useTheme();
 
   const generateUrl = useCallback(
     ({ chainId, address, txHash, blockNumber }: BlockchainExplorerUrlParams) => {
@@ -30,7 +32,7 @@ export const BlockchainExplorerLink = ({
       target="_blank"
       rel="noopener"
       href={generateUrl({ chainId, address, txHash, blockNumber })}
-      color="#000000"
+      sx={{ color: theme.palette.text.primary }}
     >
       {children}
     </Link>
