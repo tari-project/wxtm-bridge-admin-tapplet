@@ -131,7 +131,7 @@ export const WrapTokenTransactionsList = () => {
         }}
         sx={{
           '& .error-row': {
-            backgroundColor: '#ffebee',
+            backgroundColor: '#E78400',
           },
         }}
       />
