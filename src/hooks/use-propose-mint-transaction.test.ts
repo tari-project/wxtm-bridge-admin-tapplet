@@ -5,7 +5,7 @@ import { WXTM__factory } from '@tari-project/wxtm-bridge-contracts';
 import { useProposeMintTransaction } from './use-propose-mint-transaction';
 import { convertWxtmTokenTo18Decimals } from '../helpers/convert-wxtm-token-to-18-decimals';
 import { useSafe } from './use-safe';
-import { SAFE_ADDRESS, WXTM_TOKEN_ADDRESS } from '../config';
+import { MINT_LOW_SAFE_ADDRESS, WXTM_TOKEN_ADDRESS } from '../config';
 
 const mutate = vi.fn();
 vi.mock('@refinedev/core', () => ({
@@ -110,7 +110,7 @@ describe('useProposeMintTransaction', () => {
 
     const api = useSafe().initApi();
     expect(api.proposeTransaction).toHaveBeenCalledWith({
-      safeAddress: SAFE_ADDRESS,
+      safeAddress: MINT_LOW_SAFE_ADDRESS,
       safeTransactionData: { nonce },
       safeTxHash: '0xTestHash',
       senderAddress: '0xTestAddress',

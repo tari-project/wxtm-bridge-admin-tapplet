@@ -13,7 +13,7 @@ import { utils } from 'ethers';
 import { useForm } from '@refinedev/react-hook-form';
 import { useModal } from '@refinedev/core';
 
-import { SAFE_ADDRESS } from '../config';
+import { MINT_LOW_SAFE_ADDRESS } from '../config';
 import { CreateTransactionProps } from '@safe-global/protocol-kit';
 
 import { WXTM__factory } from '@tari-project/wxtm-bridge-contracts';
@@ -29,7 +29,7 @@ const useCreateTransaction = () => {
     try {
       const api = initApi();
       const safe = await initSafe();
-      const nextNonce = await api.getNextNonce(SAFE_ADDRESS);
+      const nextNonce = await api.getNextNonce(MINT_LOW_SAFE_ADDRESS);
 
       const options = {
         nonce: Number(nextNonce),
@@ -44,7 +44,7 @@ const useCreateTransaction = () => {
       const senderSignature = await safe.signHash(safeTxHash);
 
       await api.proposeTransaction({
-        safeAddress: SAFE_ADDRESS,
+        safeAddress: MINT_LOW_SAFE_ADDRESS,
         safeTransactionData: safeTransaction.data,
         safeTxHash,
         senderAddress: address || '',
