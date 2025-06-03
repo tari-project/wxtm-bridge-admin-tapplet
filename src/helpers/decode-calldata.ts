@@ -1,5 +1,4 @@
-import { WXTMInterface } from '@tari-project/wxtm-bridge-contracts/typechain/contracts/WXTM';
-import { WXTMBridgeInterface } from '@tari-project/wxtm-bridge-contracts/typechain/contracts/WXTMBridge';
+import { WXTMControllerInterface } from '@tari-project/wxtm-bridge-contracts/typechain/contracts/WXTMController';
 
 export type DecodedParameter = {
   name: string;
@@ -17,7 +16,7 @@ export const decodeCalldata = ({
   contractInterface,
 }: {
   data?: string;
-  contractInterface: WXTMInterface | WXTMBridgeInterface;
+  contractInterface: WXTMControllerInterface;
 }): DecodedCallData => {
   try {
     if (!data || typeof data !== 'string' || !data.startsWith('0x')) {

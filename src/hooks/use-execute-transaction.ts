@@ -8,9 +8,9 @@ import { useSafe } from './use-safe';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const useExecuteTransaction = () => {
+export const useExecuteTransaction = (safeAddress?: string) => {
   const [loading, setLoading] = useState(false);
-  const { initSafe } = useSafe();
+  const { initSafe } = useSafe(safeAddress);
   const { open } = useNotification();
 
   const executeTransaction = async (transaction: SafeTransaction) => {

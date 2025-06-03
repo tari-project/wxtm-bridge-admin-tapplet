@@ -1,12 +1,12 @@
 import { useState } from 'react';
+import { useNotification } from '@refinedev/core';
 
 import { SafeTransaction } from '../providers/safe-transactions-data-provider';
 import { useSafe } from './use-safe';
-import { useNotification } from '@refinedev/core';
 
-export const useSignTransaction = () => {
+export const useSignTransaction = (safeAddress?: string) => {
   const [loading, setLoading] = useState(false);
-  const { initApi, initSafe } = useSafe();
+  const { initApi, initSafe } = useSafe(safeAddress);
   const { open } = useNotification();
 
   const signTransaction = async ({ safeTxHash }: SafeTransaction) => {
