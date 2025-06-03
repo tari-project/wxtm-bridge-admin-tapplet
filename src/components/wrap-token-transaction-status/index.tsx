@@ -41,6 +41,11 @@ export const WrapTokenTransactionStatus = ({
           label: 'Safe Tx Executed',
           color: 'success',
         };
+      case WrapTokenTransactionEntity.status.TOKENS_RECEIVED_WITH_MISMATCH:
+        return {
+          label: 'Amount Mismatch',
+          color: 'warning',
+        };
       default:
         return {
           label: status || 'Unknown',
