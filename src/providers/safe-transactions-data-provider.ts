@@ -7,7 +7,7 @@ import {
 } from '@refinedev/core';
 import SafeApiKit, { SafeMultisigTransactionListResponse } from '@safe-global/api-kit';
 
-import { SAFE_ADDRESS, NETWORK_ID } from '../config';
+import { MINT_LOW_SAFE_ADDRESS, NETWORK_ID } from '../config';
 
 export type SafeTransaction = SafeMultisigTransactionListResponse['results'][0];
 
@@ -20,7 +20,7 @@ export const safeTransactionsDataProvider: DataProvider = {
     const { current = 1, pageSize = 10 } = pagination || {};
     const offset = (current - 1) * pageSize;
 
-    const { results, count } = await apiKit.getMultisigTransactions(SAFE_ADDRESS, {
+    const { results, count } = await apiKit.getMultisigTransactions(MINT_LOW_SAFE_ADDRESS, {
       limit: pageSize,
       offset,
     });

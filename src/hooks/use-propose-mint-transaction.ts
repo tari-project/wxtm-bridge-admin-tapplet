@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import { WXTM__factory } from '@tari-project/wxtm-bridge-contracts';
 
 import { useSafe } from './use-safe';
-import { SAFE_ADDRESS, WXTM_TOKEN_ADDRESS } from '../config';
+import { MINT_LOW_SAFE_ADDRESS, WXTM_TOKEN_ADDRESS } from '../config';
 import { convertWxtmTokenTo18Decimals } from '../helpers/convert-wxtm-token-to-18-decimals';
 
 export const useProposeMintTransaction = () => {
@@ -29,7 +29,7 @@ export const useProposeMintTransaction = () => {
     try {
       const safe = await initSafe();
       const api = initApi();
-      const nextNonce = await api.getNextNonce(SAFE_ADDRESS);
+      const nextNonce = await api.getNextNonce(MINT_LOW_SAFE_ADDRESS);
 
       const wxtmTokenAmount18Decimals = convertWxtmTokenTo18Decimals({
         wxtmTokenAmount: wxtmTokenAmountAfterFee,
@@ -57,7 +57,7 @@ export const useProposeMintTransaction = () => {
       const senderSignature = await safe.signHash(safeTxHash);
 
       await api.proposeTransaction({
-        safeAddress: SAFE_ADDRESS,
+        safeAddress: MINT_LOW_SAFE_ADDRESS,
         safeTransactionData: safeTransaction.data,
         safeTxHash,
         senderAddress: address || '',

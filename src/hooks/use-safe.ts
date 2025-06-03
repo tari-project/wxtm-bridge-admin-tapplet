@@ -2,7 +2,7 @@ import SafeApiKit from '@safe-global/api-kit';
 import Safe, { Eip1193Provider } from '@safe-global/protocol-kit';
 import { useAccount } from 'wagmi';
 
-import { SAFE_ADDRESS } from '../config';
+import { MINT_LOW_SAFE_ADDRESS } from '../config';
 
 export const useSafe = () => {
   const { chainId, address, connector } = useAccount();
@@ -17,7 +17,7 @@ export const useSafe = () => {
     const safe = await Safe.init({
       provider,
       signer: address,
-      safeAddress: SAFE_ADDRESS,
+      safeAddress: MINT_LOW_SAFE_ADDRESS,
     });
 
     return safe;
