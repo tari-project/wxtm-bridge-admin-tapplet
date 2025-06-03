@@ -48,12 +48,12 @@ function App() {
 
   const mintLowSafeDataProvider = useMemo(
     () => safeTransactionsDataProvider(MINT_LOW_SAFE_ADDRESS),
-    [MINT_LOW_SAFE_ADDRESS]
+    []
   );
 
   const mintHighSafeDataProvider = useMemo(
     () => safeTransactionsDataProvider(MINT_HIGH_SAFE_ADDRESS),
-    [MINT_HIGH_SAFE_ADDRESS]
+    []
   );
 
   if (isLoading) {
