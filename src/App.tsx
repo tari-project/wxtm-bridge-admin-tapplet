@@ -30,7 +30,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { Header } from './components/header';
 import { ColorModeContextProvider } from './contexts/color-mode';
 import { Login } from './pages/login';
-import { API_URL } from './config';
+import { API_URL, MINT_LOW_SAFE_ADDRESS, MINT_HIGH_SAFE_ADDRESS } from './config';
 import { useAuthProvider } from './hooks/use-auth-provider';
 import { WalletProvider } from './components/wallet-provider';
 import { safeTransactionsDataProvider } from './providers/safe-transactions-data-provider';
@@ -40,7 +40,6 @@ import { WrapTokenTransactionsList } from './pages/wrap-token-transactions';
 import { WrapTokenTransactionsEdit } from './pages/wrap-token-transactions/edit';
 import { TokensUnwrappedList } from './pages/tokens-unwrapped';
 import { TokensUnwrappedEdit } from './pages/tokens-unwrapped/edit';
-import { MINT_LOW_SAFE_ADDRESS, MINT_HIGH_SAFE_ADDRESS } from './config/index';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
