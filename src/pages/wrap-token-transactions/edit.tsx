@@ -98,6 +98,22 @@ export const WrapTokenTransactionsEdit = () => {
             slotProps={{ input: { readOnly: true } }}
           />
 
+          {transaction.tokenAmountInWallet &&
+            transaction.tokenAmountInWallet !== transaction.tokenAmount && (
+              <TextField
+                label="Tokens Received in Wallet"
+                value={`${utils.formatUnits(transaction.tokenAmountInWallet, 6).toString()} wXTM`}
+                slotProps={{ input: { readOnly: true } }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'warning.main',
+                    },
+                  },
+                }}
+              />
+            )}
+
           <TextField
             label="Fee %"
             value={transaction.feePercentageBps / 100}
