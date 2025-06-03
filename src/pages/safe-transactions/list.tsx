@@ -47,12 +47,12 @@ export const SafeTransactionsList = () => {
         field: '1',
         headerName: 'Operation:',
         display: 'flex',
-        flex: 0.4,
+        flex: 0.7,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => (
           <Chip
-            sx={{ width: 60 }}
+            sx={{ px: 1 }}
             size="small"
             label={decodeWXTMTokenCalldata({ data: row.data })?.method || 'other'}
           />

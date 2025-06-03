@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import { utils } from 'ethers';
 import {
   Box,
   Button,
@@ -19,16 +20,17 @@ import { useExecuteTransaction } from '../../hooks/use-execute-transaction';
 import { SafeTransactionStatus } from '../../components/safe-transaction-status';
 import CallDataView from '../../components/call-data-view';
 import { decodeWXTMTokenCalldata } from '../../helpers/decode-wxtm-token-calldata';
-import { utils } from 'ethers';
 
 export const SafeTransactionsShow = () => {
   const {
     query: { data, isLoading, refetch },
   } = useShow<SafeTransaction>({});
-  const { signTransaction, loading } = useSignTransaction();
-  const { executeTransaction, loading: executingTransaction } = useExecuteTransaction();
 
   const transaction = data?.data;
+  const safeAddress = transaction?.safe;
+
+  const { signTransaction, loading } = useSignTransaction(safeAddress);
+  const { executeTransaction, loading: executingTransaction } = useExecuteTransaction(safeAddress);
 
   const handleSignTransaction = useCallback(() => {
     if (transaction) {
@@ -73,7 +75,7 @@ export const SafeTransactionsShow = () => {
             loading={loading}
             variant="contained"
             color="error"
-            disabled={allSignaturesCollected || true}
+            disabled={allSignaturesCollected}
           >
             Sign Transaction
           </Button>
@@ -83,7 +85,7 @@ export const SafeTransactionsShow = () => {
             loading={executingTransaction}
             variant="contained"
             color="error"
-            disabled={!canExecuteTransaction || true}
+            disabled={!canExecuteTransaction}
           >
             Execute Transaction
           </Button>
@@ -92,6 +94,12 @@ export const SafeTransactionsShow = () => {
     >
       <Stack gap={4} mt={2}>
         <SafeTransactionStatus transaction={transaction} />
+
+        <TextField
+          label="Proposer"
+          value={transaction.proposer || 'N/A'}
+          slotProps={{ input: { readOnly: true } }}
+        />
 
         {transaction.confirmations && (
           <List dense>
