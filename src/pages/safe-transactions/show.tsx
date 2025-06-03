@@ -73,7 +73,7 @@ export const SafeTransactionsShow = () => {
             loading={loading}
             variant="contained"
             color="error"
-            disabled={allSignaturesCollected}
+            disabled={allSignaturesCollected || true}
           >
             Sign Transaction
           </Button>
@@ -83,7 +83,7 @@ export const SafeTransactionsShow = () => {
             loading={executingTransaction}
             variant="contained"
             color="error"
-            disabled={!canExecuteTransaction}
+            disabled={!canExecuteTransaction || true}
           >
             Execute Transaction
           </Button>

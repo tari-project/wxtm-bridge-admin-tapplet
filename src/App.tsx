@@ -20,6 +20,7 @@ import routerBindings, {
 } from '@refinedev/react-router';
 import axios from 'axios';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router';
+import { useMemo } from 'react';
 
 import RotateRightIcon from '@mui/icons-material/RotateRight';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
@@ -39,10 +40,21 @@ import { WrapTokenTransactionsList } from './pages/wrap-token-transactions';
 import { WrapTokenTransactionsEdit } from './pages/wrap-token-transactions/edit';
 import { TokensUnwrappedList } from './pages/tokens-unwrapped';
 import { TokensUnwrappedEdit } from './pages/tokens-unwrapped/edit';
+import { MINT_LOW_SAFE_ADDRESS, MINT_HIGH_SAFE_ADDRESS } from './config/index';
 
 function App() {
   const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
   const { isLoading, authProvider } = useAuthProvider({ axios });
+
+  const mintLowSafeDataProvider = useMemo(
+    () => safeTransactionsDataProvider(MINT_LOW_SAFE_ADDRESS),
+    [MINT_LOW_SAFE_ADDRESS]
+  );
+
+  const mintHighSafeDataProvider = useMemo(
+    () => safeTransactionsDataProvider(MINT_HIGH_SAFE_ADDRESS),
+    [MINT_HIGH_SAFE_ADDRESS]
+  );
 
   if (isLoading) {
     return <span>loading...</span>;
@@ -58,7 +70,11 @@ function App() {
             <DevtoolsProvider>
               <WalletProvider>
                 <Refine
-                  dataProvider={{ default: dataProvider, safeTransactionsDataProvider }}
+                  dataProvider={{
+                    default: dataProvider,
+                    mintLowSafeDataProvider,
+                    mintHighSafeDataProvider,
+                  }}
                   notificationProvider={useNotificationProvider}
                   routerProvider={routerBindings}
                   authProvider={authProvider}
@@ -82,11 +98,20 @@ function App() {
                       },
                     },
                     {
-                      name: 'safe transaction',
-                      list: '/safe-transactions',
+                      name: 'Mint low safe transaction',
+                      list: '/mint-low-safe-transactions',
                       show: '/safe-transactions/show/:id',
                       icon: <LockIcon />,
-                      meta: { dataProviderName: 'safeTransactionsDataProvider' },
+                      meta: {
+                        dataProviderName: 'mintLowSafeDataProvider',
+                      },
+                    },
+                    {
+                      name: 'Mint high safe transaction',
+                      list: '/mint-high-safe-transactions',
+                      show: '/safe-transactions/show/:id',
+                      icon: <LockIcon />,
+                      meta: { dataProviderName: 'mintHighSafeDataProvider' },
                     },
                   ]}
                   options={{
@@ -127,10 +152,20 @@ function App() {
                         <Route path="edit/:id" element={<TokensUnwrappedEdit />} />
                       </Route>
 
-                      <Route path="/safe-transactions">
-                        <Route index element={<SafeTransactionsList />} />
-                        <Route path="show/:id" element={<SafeTransactionsShow />} />
-                      </Route>
+                      <Route
+                        path="/mint-low-safe-transactions"
+                        element={<SafeTransactionsList />}
+                      />
+
+                      <Route
+                        path="/mint-high-safe-transactions"
+                        element={<SafeTransactionsList />}
+                      />
+
+                      <Route
+                        path="/safe-transactions/show/:id"
+                        element={<SafeTransactionsShow />}
+                      />
 
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
