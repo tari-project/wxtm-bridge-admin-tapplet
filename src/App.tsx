@@ -11,7 +11,6 @@ import {
 
 import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import nestjsxCrudDataProvider from '@refinedev/nestjsx-crud';
 import routerBindings, {
   CatchAllNavigate,
   DocumentTitleHandler,
@@ -40,9 +39,10 @@ import { WrapTokenTransactionsList } from './pages/wrap-token-transactions';
 import { WrapTokenTransactionsEdit } from './pages/wrap-token-transactions/edit';
 import { TokensUnwrappedList } from './pages/tokens-unwrapped';
 import { TokensUnwrappedEdit } from './pages/tokens-unwrapped/edit';
+import { customNestjsxCrudDataProvider } from './providers/custom-nestjsx-crud-provider';
 
 function App() {
-  const dataProvider = nestjsxCrudDataProvider(API_URL, axios);
+  const dataProvider = customNestjsxCrudDataProvider(API_URL, axios);
   const { isLoading, authProvider } = useAuthProvider({ axios });
 
   const mintLowSafeDataProvider = useMemo(

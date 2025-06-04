@@ -11,6 +11,11 @@ import { WrapTokenTransactionStatus } from '../../components/wrap-token-transact
 import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
 
+import {
+  equalsEmptyOperators,
+  containsEqualsEmptyOperators,
+} from '../../helpers/allowed-operators';
+
 export const WrapTokenTransactionsList = () => {
   const { dataGridProps } = useDataGrid({
     sorters: {
@@ -21,6 +26,7 @@ export const WrapTokenTransactionsList = () => {
         },
       ],
     },
+
     syncWithLocation: true,
   });
 
@@ -33,6 +39,7 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Safe Nonce:',
         display: 'flex',
         flex: 0.3,
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'paymentId',
@@ -42,6 +49,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.paymentId} />;
         },
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'from',
@@ -51,6 +59,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.from} />;
         },
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'to',
@@ -60,6 +69,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.to} />;
         },
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'tokenAmount',
@@ -71,6 +81,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
         },
+        filterOperators: containsEqualsEmptyOperators(),
       },
       {
         field: 'amountAfterFee',
@@ -82,6 +93,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
         },
+        filterOperators: containsEqualsEmptyOperators(),
       },
       {
         field: 'feeAmount',
@@ -93,6 +105,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
         },
+        filterOperators: containsEqualsEmptyOperators(),
       },
       {
         field: 'status',
@@ -103,6 +116,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <WrapTokenTransactionStatus status={row.status} />;
         },
+        filterOperators: equalsEmptyOperators(),
       },
 
       {
@@ -113,6 +127,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
+        filterable: false,
       },
     ],
     []

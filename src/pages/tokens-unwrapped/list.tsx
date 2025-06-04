@@ -12,6 +12,8 @@ import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
 import { TokensUnwrappedStatus } from '../../components/tokens-unwrapped-status';
 
+import { equalsEmptyOperators } from '../../helpers/allowed-operators';
+
 export const TokensUnwrappedList = () => {
   const { dataGridProps } = useDataGrid({
     sorters: {
@@ -34,6 +36,7 @@ export const TokensUnwrappedList = () => {
         headerName: 'Subgraph ID:',
         display: 'flex',
         flex: 1,
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'from',
@@ -43,6 +46,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <BlockchainExplorerLink address={row.from}>{row.from}</BlockchainExplorerLink>;
         },
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'targetTariAddress',
@@ -52,6 +56,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.targetTariAddress} />;
         },
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'amount',
@@ -63,6 +68,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amount, 18)}</Typography>;
         },
+        filterable: false,
       },
 
       {
@@ -74,6 +80,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <TokensUnwrappedStatus status={row.status} />;
         },
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'blockNumber',
@@ -81,6 +88,7 @@ export const TokensUnwrappedList = () => {
         display: 'flex',
         justifyContent: 'center',
         flex: 0.8,
+        filterOperators: equalsEmptyOperators(),
       },
 
       {
@@ -91,6 +99,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
+        filterable: false,
       },
 
       {
@@ -101,6 +110,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
+        filterable: false,
       },
     ],
     []
