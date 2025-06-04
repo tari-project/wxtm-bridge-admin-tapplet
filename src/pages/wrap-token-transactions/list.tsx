@@ -4,13 +4,17 @@ import { useNavigation } from '@refinedev/core';
 import React from 'react';
 import { utils } from 'ethers';
 import { Typography } from '@mui/material';
-import { getGridStringOperators } from '@mui/x-data-grid';
 
 import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
 
 import { WrapTokenTransactionStatus } from '../../components/wrap-token-transaction-status';
 import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
+
+import {
+  equalsEmptyOperators,
+  containsEqualsEmptyOperators,
+} from '../../helpers/allowed-operators';
 
 export const WrapTokenTransactionsList = () => {
   const { dataGridProps } = useDataGrid({
@@ -35,9 +39,7 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Safe Nonce:',
         display: 'flex',
         flex: 0.3,
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'paymentId',
@@ -47,9 +49,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.paymentId} />;
         },
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'from',
@@ -59,9 +59,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.from} />;
         },
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'to',
@@ -71,9 +69,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.to} />;
         },
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'tokenAmount',
@@ -85,9 +81,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
         },
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['contains', 'equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: containsEqualsEmptyOperators(),
       },
       {
         field: 'amountAfterFee',
@@ -99,9 +93,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
         },
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['contains', 'equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: containsEqualsEmptyOperators(),
       },
       {
         field: 'feeAmount',
@@ -113,9 +105,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
         },
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['contains', 'equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: containsEqualsEmptyOperators(),
       },
       {
         field: 'status',
@@ -126,9 +116,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <WrapTokenTransactionStatus status={row.status} />;
         },
-        filterOperators: getGridStringOperators().filter((op) =>
-          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
-        ),
+        filterOperators: equalsEmptyOperators(),
       },
 
       {
