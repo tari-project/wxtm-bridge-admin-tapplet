@@ -4,6 +4,7 @@ import React from 'react';
 import { utils } from 'ethers';
 import { Typography } from '@mui/material';
 import { useNavigation } from '@refinedev/core';
+import { getGridStringOperators } from '@mui/x-data-grid';
 
 import { TokensUnwrappedEntity } from '@tari-project/wxtm-bridge-backend-api';
 
@@ -34,6 +35,9 @@ export const TokensUnwrappedList = () => {
         headerName: 'Subgraph ID:',
         display: 'flex',
         flex: 1,
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'from',
@@ -43,6 +47,9 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <BlockchainExplorerLink address={row.from}>{row.from}</BlockchainExplorerLink>;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'targetTariAddress',
@@ -52,6 +59,9 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.targetTariAddress} />;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'amount',
@@ -63,6 +73,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amount, 18)}</Typography>;
         },
+        filterable: false,
       },
 
       {
@@ -74,6 +85,9 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <TokensUnwrappedStatus status={row.status} />;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'blockNumber',
@@ -81,6 +95,9 @@ export const TokensUnwrappedList = () => {
         display: 'flex',
         justifyContent: 'center',
         flex: 0.8,
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
 
       {
@@ -91,6 +108,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
+        filterable: false,
       },
 
       {
@@ -101,6 +119,7 @@ export const TokensUnwrappedList = () => {
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
+        filterable: false,
       },
     ],
     []

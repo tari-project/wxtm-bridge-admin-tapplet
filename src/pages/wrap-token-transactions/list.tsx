@@ -4,6 +4,7 @@ import { useNavigation } from '@refinedev/core';
 import React from 'react';
 import { utils } from 'ethers';
 import { Typography } from '@mui/material';
+import { getGridStringOperators } from '@mui/x-data-grid';
 
 import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
 
@@ -21,6 +22,7 @@ export const WrapTokenTransactionsList = () => {
         },
       ],
     },
+
     syncWithLocation: true,
   });
 
@@ -33,6 +35,9 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Safe Nonce:',
         display: 'flex',
         flex: 0.3,
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'paymentId',
@@ -42,6 +47,9 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.paymentId} />;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'from',
@@ -51,6 +59,9 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.from} />;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'to',
@@ -60,6 +71,9 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.to} />;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'tokenAmount',
@@ -71,6 +85,9 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['contains', 'equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'amountAfterFee',
@@ -82,6 +99,9 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['contains', 'equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'feeAmount',
@@ -93,6 +113,9 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['contains', 'equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
       {
         field: 'status',
@@ -103,6 +126,9 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <WrapTokenTransactionStatus status={row.status} />;
         },
+        filterOperators: getGridStringOperators().filter((op) =>
+          ['equals', 'isEmpty', 'isNotEmpty'].includes(op.value)
+        ),
       },
 
       {
@@ -113,6 +139,7 @@ export const WrapTokenTransactionsList = () => {
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
+        filterable: false,
       },
     ],
     []
