@@ -98,7 +98,7 @@ export const SafeTransactionsList = () => {
         flex: 0.4,
         filterable: false,
         sortable: false,
-        renderCell: ({ row }) => `${row.confirmationsRequired}/${row.confirmations?.length || 0}`,
+        renderCell: ({ row }) => `${row.confirmations?.length || 0}/${row.confirmationsRequired}`,
       },
       {
         field: '5',
