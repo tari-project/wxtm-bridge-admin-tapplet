@@ -8,8 +8,6 @@ import { DateFormatedField } from '../date-formated-field';
 import { formatTimeElapsed } from '../../helpers/format-time-elapsed';
 import { WrapTokenTransactionAuditTabProps } from './types';
 
-const minWidth = 150;
-
 export const WrapTokenTransactionAuditTab = ({
   transaction,
 }: WrapTokenTransactionAuditTabProps) => {
@@ -26,17 +24,17 @@ export const WrapTokenTransactionAuditTab = ({
       {
         field: 'fromStatus',
         headerName: 'From:',
-        minWidth,
+        minWidth: 200,
       },
       {
         field: 'toStatus',
         headerName: 'To:',
-        minWidth,
+        minWidth: 200,
       },
       {
         field: 'timeElapsed',
         headerName: 'Time Elapsed:',
-        minWidth,
+        minWidth: 150,
         renderCell: ({ row }) => {
           const index = audits.findIndex((audit) => audit.id === row.id);
 
@@ -54,7 +52,7 @@ export const WrapTokenTransactionAuditTab = ({
       {
         field: 'totalTimeElapsed',
         headerName: 'Total Time:',
-        minWidth,
+        minWidth: 150,
         renderCell: ({ row }) => {
           const index = audits.findIndex((audit) => audit.id === row.id);
 
@@ -73,7 +71,7 @@ export const WrapTokenTransactionAuditTab = ({
         field: 'createdAt',
         headerName: 'Created At:',
         display: 'flex',
-        minWidth,
+        minWidth: 150,
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
