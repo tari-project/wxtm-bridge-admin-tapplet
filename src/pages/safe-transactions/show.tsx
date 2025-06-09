@@ -20,6 +20,7 @@ import { useExecuteTransaction } from '../../hooks/use-execute-transaction';
 import { SafeTransactionStatus } from '../../components/safe-transaction-status';
 import CallDataView from '../../components/call-data-view';
 import { decodeWXTMTokenCalldata } from '../../helpers/decode-wxtm-token-calldata';
+import { BlockchainExplorerLink } from '../../components/blockchain-explorer-link';
 
 export const SafeTransactionsShow = () => {
   const {
@@ -135,6 +136,15 @@ export const SafeTransactionsShow = () => {
           }
           slotProps={{ input: { readOnly: true } }}
         />
+
+        <Box pl={1}>
+          <Typography variant="body1" fontWeight="medium" mb={1}>
+            Transaction Hash:
+          </Typography>
+          <BlockchainExplorerLink txHash={transaction.transactionHash}>
+            {transaction.transactionHash}
+          </BlockchainExplorerLink>
+        </Box>
 
         <CallDataView decodedData={decodedData} />
       </Stack>
