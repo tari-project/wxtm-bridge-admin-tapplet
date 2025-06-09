@@ -22,7 +22,7 @@ export const WrapTokenTransactionDataTab = ({
       ...saveButtonProps,
       children: 'Reset Error Message',
     }),
-    [saveButtonProps, hasError]
+    [saveButtonProps]
   );
 
   const canNavigateToSafeTransaction = useMemo(() => {

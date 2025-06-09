@@ -1,10 +1,10 @@
 import Link from '@mui/material/Link';
-import { useCallback } from 'react';
-import { useAccount } from 'wagmi';
 import { useTheme } from '@mui/material/styles';
+import { useMemo } from 'react';
 
-import { BlockchainExplorerLinkProps, BlockchainExplorerUrlParams } from './types';
+import { BlockchainExplorerLinkProps } from './types';
 import { BLOCKCHAIN_EXPLORERS } from './const';
+import { NETWORK_ID } from '../../config';
 
 export const BlockchainExplorerLink = ({
   address,
@@ -12,26 +12,22 @@ export const BlockchainExplorerLink = ({
   blockNumber,
   children,
 }: BlockchainExplorerLinkProps) => {
-  const { chainId } = useAccount();
   const theme = useTheme();
 
-  const generateUrl = useCallback(
-    ({ chainId, address, txHash, blockNumber }: BlockchainExplorerUrlParams) => {
-      const baseUrl = BLOCKCHAIN_EXPLORERS[chainId as number]?.replace(/\/?$/, '/');
-      if (!baseUrl) return '';
+  const generateUrl = useMemo(() => {
+    const baseUrl = BLOCKCHAIN_EXPLORERS[NETWORK_ID]?.replace(/\/?$/, '/');
+    if (!baseUrl) return '';
 
-      if (txHash) return `${baseUrl}tx/${txHash}/`;
-      if (address) return `${baseUrl}address/${address}/`;
-      if (blockNumber) return `${baseUrl}block/${blockNumber}/`;
-    },
-    []
-  );
+    if (txHash) return `${baseUrl}tx/${txHash}/`;
+    if (address) return `${baseUrl}address/${address}/`;
+    if (blockNumber) return `${baseUrl}block/${blockNumber}/`;
+  }, [address, blockNumber, txHash]);
 
   return (
     <Link
       target="_blank"
       rel="noopener"
-      href={generateUrl({ chainId, address, txHash, blockNumber })}
+      href={generateUrl}
       sx={{ color: theme.palette.text.primary }}
     >
       {children}
