@@ -8,6 +8,7 @@ import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-ap
 
 import { WrapTokenTransactionDataTab } from '../../components/wrap-token-transaction-data-tab';
 import { WrapTokenTransactionAuditTab } from '../../components/wrap-token-transaction-audit-tab';
+import { WrapTokenTransactionDebugTab } from '../../components/wrap-token-transaction-debug-tab';
 
 export const WrapTokenTransactionsEdit = () => {
   const [value, setValue] = useState('0');
@@ -36,6 +37,7 @@ export const WrapTokenTransactionsEdit = () => {
           >
             <Tab label="Data" value="0" />
             <Tab label="Audit" value="1" />
+            {transaction.debug && <Tab label="Debug" value="2" />}
           </Tabs>
 
           <TabPanel value="0" sx={{ px: 0 }}>
@@ -47,6 +49,10 @@ export const WrapTokenTransactionsEdit = () => {
 
           <TabPanel value="1" sx={{ px: 0 }}>
             <WrapTokenTransactionAuditTab transaction={transaction} />
+          </TabPanel>
+
+          <TabPanel value="2" sx={{ px: 0 }}>
+            <WrapTokenTransactionDebugTab transaction={transaction} />
           </TabPanel>
         </TabContext>
       )}

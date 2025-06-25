@@ -4,6 +4,7 @@ import { useNavigation } from '@refinedev/core';
 import React from 'react';
 import { utils } from 'ethers';
 import { Typography } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
 
@@ -135,6 +136,16 @@ export const WrapTokenTransactionsList = () => {
           return <DateFormatedField date={row.createdAt} />;
         },
         filterable: false,
+      },
+      {
+        field: 'debug',
+        headerName: 'Debug data:',
+        display: 'flex',
+        flex: 0.2,
+        renderCell: ({ row }) => {
+          return row.debug ? <CheckCircleIcon color="warning" fontSize="medium" /> : null;
+        },
+        filterOperators: equalsEmptyOperators(),
       },
     ],
     []
