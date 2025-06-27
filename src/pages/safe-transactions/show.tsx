@@ -50,7 +50,7 @@ export const SafeTransactionsShow = () => {
   }, [transaction, executeTransaction, refetch]);
 
   const allSignaturesCollected = useMemo(() => {
-    return transaction?.confirmationsRequired === transaction?.confirmations?.length;
+    return (transaction?.confirmationsRequired || 1) <= (transaction?.confirmations?.length || 0);
   }, [transaction]);
 
   const canExecuteTransaction = useMemo(() => {
