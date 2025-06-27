@@ -6,7 +6,7 @@ import { SafeTransactionStatusProps } from './types';
 export const SafeTransactionStatus = ({ transaction }: SafeTransactionStatusProps) => {
   const { label, color } = useMemo(() => {
     const allSignaturesCollected =
-      transaction?.confirmationsRequired === transaction?.confirmations?.length;
+      transaction?.confirmationsRequired <= (transaction?.confirmations?.length || 0);
 
     if (allSignaturesCollected && !transaction?.isExecuted) {
       return {
