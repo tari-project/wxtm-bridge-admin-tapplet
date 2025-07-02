@@ -81,6 +81,9 @@ export const WrapTokenTransactionAuditTab = ({
         display: 'flex',
         flex: 1,
         headerName: 'Note:',
+        renderCell: ({ row }) => {
+          return <>{row?.note?.error}</>;
+        },
       },
     ],
     [audits]

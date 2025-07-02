@@ -16,6 +16,7 @@ import {
   equalsEmptyOperators,
   containsEqualsEmptyOperators,
 } from '../../helpers/allowed-operators';
+import { BlockchainExplorerLink } from '../../components/blockchain-explorer-link';
 
 export const WrapTokenTransactionsList = () => {
   const { dataGridProps } = useDataGrid({
@@ -41,6 +42,13 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         flex: 0.2,
         filterOperators: equalsEmptyOperators(),
+        renderCell: ({ row }) => {
+          return (
+            <Typography sx={{ backgroundColor: row?.error?.length && '#E78400' }}>
+              {row.id}
+            </Typography>
+          );
+        },
       },
       {
         field: 'safeNonce',
@@ -116,6 +124,21 @@ export const WrapTokenTransactionsList = () => {
         filterOperators: containsEqualsEmptyOperators(),
       },
       {
+        field: 'transactionHash',
+        headerName: 'Transaction Hash:',
+        display: 'flex',
+        flex: 0.5,
+        filterable: false,
+        sortable: false,
+        renderCell: ({ row }) => {
+          return (
+            <BlockchainExplorerLink txHash={row.transactionHash}>
+              <TruncatedAddress address={row.transactionHash || ''} startChars={5} endChars={7} />
+            </BlockchainExplorerLink>
+          );
+        },
+      },
+      {
         field: 'status',
         headerName: 'Status:',
         display: 'flex',
@@ -158,14 +181,6 @@ export const WrapTokenTransactionsList = () => {
         columns={columns}
         onRowClick={(params) => {
           push(`/wrap-token-transactions/edit/${params.row.id}`);
-        }}
-        getRowClassName={(params) => {
-          return params.row.error ? 'error-row' : '';
-        }}
-        sx={{
-          '& .error-row': {
-            backgroundColor: '#E78400',
-          },
         }}
       />
     </List>
