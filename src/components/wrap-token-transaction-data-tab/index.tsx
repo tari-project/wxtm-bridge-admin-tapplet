@@ -15,7 +15,7 @@ export const WrapTokenTransactionDataTab = ({
   const { push } = useNavigation();
 
   const hasError = useMemo(() => {
-    return !!transaction?.error.length;
+    return !!transaction?.error?.length;
   }, [transaction]);
 
   const overidedSaveButtonProps = useMemo(
