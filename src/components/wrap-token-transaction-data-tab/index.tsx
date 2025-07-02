@@ -1,11 +1,12 @@
 import { useCallback, useMemo } from 'react';
-import { Button, Paper, Stack, TextField } from '@mui/material';
+import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useNavigation } from '@refinedev/core';
 import { utils } from 'ethers';
 import ReactJsonView from '@microlink/react-json-view';
 
 import { WrapTokenTransactionStatus } from '../wrap-token-transaction-status';
 import { WrapTokenTransactionDataTabProps } from './types';
+import { BlockchainExplorerLink } from '../blockchain-explorer-link';
 
 export const WrapTokenTransactionDataTab = ({
   transaction,
@@ -14,13 +15,13 @@ export const WrapTokenTransactionDataTab = ({
   const { push } = useNavigation();
 
   const hasError = useMemo(() => {
-    return !!transaction?.error;
+    return !!transaction?.error.length;
   }, [transaction]);
 
   const overidedSaveButtonProps = useMemo(
     () => ({
       ...saveButtonProps,
-      children: 'Reset Error Message',
+      children: 'Reset Processor to the last working state',
     }),
     [saveButtonProps]
   );
@@ -78,6 +79,17 @@ export const WrapTokenTransactionDataTab = ({
           slotProps={{ input: { readOnly: true } }}
         />
 
+        {transaction.transactionHash && (
+          <Box pl={1}>
+            <Typography variant="body1" fontWeight="medium" mb={1}>
+              Etherscan Transaction Hash:
+            </Typography>
+            <BlockchainExplorerLink txHash={transaction.transactionHash}>
+              {transaction.transactionHash}
+            </BlockchainExplorerLink>
+          </Box>
+        )}
+
         <TextField
           label="Tokens Received"
           value={`${utils.formatUnits(transaction.tokenAmount, 6).toString()} wXTM`}
@@ -119,22 +131,29 @@ export const WrapTokenTransactionDataTab = ({
         />
 
         {hasError && (
-          <Paper
-            elevation={3}
-            sx={{
-              borderRadius: 2,
-              padding: 3,
-            }}
-          >
-            <ReactJsonView
-              src={{ message: transaction.error }}
-              enableClipboard={false}
-              displayObjectSize={false}
-              name={'error'}
-            />
-
-            <Button variant="contained" sx={{ width: 300, mt: 3 }} {...overidedSaveButtonProps} />
-          </Paper>
+          <>
+            <Paper
+              elevation={3}
+              sx={{
+                borderRadius: 2,
+                padding: 3,
+              }}
+            >
+              <ReactJsonView
+                src={transaction.error}
+                enableClipboard={false}
+                displayObjectSize={false}
+                name={'errors_received'}
+              />
+            </Paper>
+            <Stack>
+              <Typography variant="h6" mb={1}>
+                This will clear all existing errors and reset the processor to the previous working
+                state, allowing it to retry transaction processing.
+              </Typography>
+              <Button variant="contained" {...overidedSaveButtonProps} />
+            </Stack>
+          </>
         )}
       </Stack>
     </>

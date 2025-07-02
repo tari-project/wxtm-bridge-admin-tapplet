@@ -26,10 +26,20 @@ export const WrapTokenTransactionStatus = ({
           label: 'Creating Safe Tx',
           color: 'warning',
         };
+      case WrapTokenTransactionEntity.status.CREATING_SAFE_TRANSACTION_UNPROCESSABLE:
+        return {
+          label: 'Creating Safe Tx Error',
+          color: 'error',
+        };
       case WrapTokenTransactionEntity.status.SAFE_TRANSACTION_CREATED:
         return {
           label: 'Safe Tx Created',
           color: 'secondary',
+        };
+      case WrapTokenTransactionEntity.status.SAFE_TRANSACTION_UNPROCESSABLE:
+        return {
+          label: 'Safe Tx Error',
+          color: 'error',
         };
       case WrapTokenTransactionEntity.status.EXECUTING_SAFE_TRANSACTION:
         return {
