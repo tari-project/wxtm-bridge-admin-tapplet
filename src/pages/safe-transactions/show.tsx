@@ -21,6 +21,7 @@ import { SafeTransactionStatus } from '../../components/safe-transaction-status'
 import CallDataView from '../../components/call-data-view';
 import { decodeWXTMTokenCalldata } from '../../helpers/decode-wxtm-token-calldata';
 import { BlockchainExplorerLink } from '../../components/blockchain-explorer-link';
+import { MINT_HIGH_SAFE_ADDRESS } from '../../config';
 
 export const SafeTransactionsShow = () => {
   const {
@@ -29,6 +30,10 @@ export const SafeTransactionsShow = () => {
 
   const transaction = data?.data;
   const safeAddress = transaction?.safe;
+
+  const isHighMintSafe = useMemo(() => {
+    return safeAddress === MINT_HIGH_SAFE_ADDRESS;
+  }, [safeAddress]);
 
   const { signTransaction, loading } = useSignTransaction(safeAddress);
   const { executeTransaction, loading: executingTransaction } = useExecuteTransaction(safeAddress);
@@ -53,10 +58,6 @@ export const SafeTransactionsShow = () => {
     return (transaction?.confirmationsRequired || 1) <= (transaction?.confirmations?.length || 0);
   }, [transaction]);
 
-  const canExecuteTransaction = useMemo(() => {
-    return allSignaturesCollected && !transaction?.isExecuted;
-  }, [transaction, allSignaturesCollected]);
-
   const decodedData = useMemo(() => {
     return decodeWXTMTokenCalldata({ data: transaction?.data });
   }, [transaction]);
@@ -72,28 +73,36 @@ export const SafeTransactionsShow = () => {
       headerButtons={() => (
         <>
           <Button
-            onClick={handleSignTransaction}
-            loading={loading}
-            variant="contained"
-            color="error"
-            disabled={allSignaturesCollected}
-          >
-            Sign Transaction
-          </Button>
-
-          <Button
             onClick={handleExecuteTransaction}
             loading={executingTransaction}
             variant="contained"
             color="error"
-            disabled={!canExecuteTransaction}
+            disabled={true}
+            sx={{ visibility: 'hidden' }}
           >
             Execute Transaction
+          </Button>
+
+          <Button
+            onClick={handleSignTransaction}
+            loading={loading}
+            variant="contained"
+            color="error"
+            disabled={allSignaturesCollected || !isHighMintSafe}
+          >
+            Sign Transaction
           </Button>
         </>
       )}
     >
       <Stack gap={4} mt={2}>
+        {allSignaturesCollected && isHighMintSafe && (
+          <Typography variant="h6" fontWeight="bold" color="warning.main">
+            All required signatures have been collected. The transaction will be executed
+            automatically within one hour; there is no need to execute it manually.
+          </Typography>
+        )}
+
         <SafeTransactionStatus transaction={transaction} />
 
         <TextField
