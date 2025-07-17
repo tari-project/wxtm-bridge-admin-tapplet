@@ -25,6 +25,7 @@ import RotateRightIcon from '@mui/icons-material/RotateRight';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LockIcon from '@mui/icons-material/Lock';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Header } from './components/header';
 import { ColorModeContextProvider } from './contexts/color-mode';
@@ -40,6 +41,8 @@ import { WrapTokenTransactionsEdit } from './pages/wrap-token-transactions/edit'
 import { TokensUnwrappedList } from './pages/tokens-unwrapped';
 import { TokensUnwrappedEdit } from './pages/tokens-unwrapped/edit';
 import { customNestjsxCrudDataProvider } from './providers/custom-nestjsx-crud-provider';
+import { SettingsEdit } from './pages/settings';
+import { settingsDataProvider } from './providers/settings-data-provider';
 
 function App() {
   const dataProvider = customNestjsxCrudDataProvider(API_URL, axios);
@@ -73,6 +76,7 @@ function App() {
                     default: dataProvider,
                     mintLowSafeDataProvider,
                     mintHighSafeDataProvider,
+                    settingsDataProvider,
                   }}
                   notificationProvider={useNotificationProvider}
                   routerProvider={routerBindings}
@@ -111,6 +115,15 @@ function App() {
                       show: '/safe-transactions/show/:id',
                       icon: <LockIcon />,
                       meta: { dataProviderName: 'mintHighSafeDataProvider' },
+                    },
+                    {
+                      name: 'Settings',
+                      list: 'settings',
+                      edit: '/settings',
+                      icon: <SettingsIcon />,
+                      meta: {
+                        dataProviderName: 'settingsDataProvider',
+                      },
                     },
                   ]}
                   options={{
@@ -165,6 +178,8 @@ function App() {
                         path="/safe-transactions/show/:id"
                         element={<SafeTransactionsShow />}
                       />
+
+                      <Route path="/settings" element={<SettingsEdit />} />
 
                       <Route path="*" element={<ErrorComponent />} />
                     </Route>
