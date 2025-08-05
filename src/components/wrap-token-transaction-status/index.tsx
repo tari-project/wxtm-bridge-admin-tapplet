@@ -8,6 +8,7 @@ import { WrapTokenTransactionStatusProps } from './types';
 export const WrapTokenTransactionStatus = ({
   status,
   size = 'small',
+  sx,
 }: WrapTokenTransactionStatusProps) => {
   const { label, color } = useMemo(() => {
     switch (status) {
@@ -56,6 +57,26 @@ export const WrapTokenTransactionStatus = ({
           label: 'Amount Mismatch',
           color: 'warning',
         };
+      case WrapTokenTransactionEntity.status.TIMEOUT:
+        return {
+          label: 'Timeout',
+          color: 'default',
+        };
+      case WrapTokenTransactionEntity.status.MINING_TOKENS_RECEIVED_BELOW_MIN_AMOUNT:
+        return {
+          label: 'Below Min Amount',
+          color: 'default',
+        };
+      case WrapTokenTransactionEntity.status.MINING_INCORECT_PAYMENT_ID:
+        return {
+          label: 'Wrong Payment ID',
+          color: 'default',
+        };
+      case WrapTokenTransactionEntity.status.MINING_INCORECT_PAYMENT_ID_AND_AMOUNT:
+        return {
+          label: 'Incorrect Amount And Payment ID',
+          color: 'default',
+        };
       default:
         return {
           label: status || 'Unknown',
@@ -64,5 +85,12 @@ export const WrapTokenTransactionStatus = ({
     }
   }, [status]);
 
-  return <Chip label={label} color={color as ChipProps['color']} size={size} sx={{ width: 150 }} />;
+  return (
+    <Chip
+      label={label}
+      color={color as ChipProps['color']}
+      size={size}
+      sx={{ width: 150, display: 'flex', ...sx }}
+    />
+  );
 };

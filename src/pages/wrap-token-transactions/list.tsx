@@ -9,6 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
 
 import { WrapTokenTransactionStatus } from '../../components/wrap-token-transaction-status';
+import { WrapTokenTransactionOrigin } from '../../components/origin-badge';
 import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
 
@@ -40,7 +41,8 @@ export const WrapTokenTransactionsList = () => {
         field: 'id',
         headerName: 'ID:',
         display: 'flex',
-        flex: 0.2,
+        align: 'center',
+        flex: 0.3,
         filterOperators: equalsEmptyOperators(),
         renderCell: ({ row }) => {
           return (
@@ -54,6 +56,7 @@ export const WrapTokenTransactionsList = () => {
         field: 'safeNonce',
         headerName: 'Safe Nonce:',
         display: 'flex',
+        align: 'center',
         flex: 0.3,
         filterOperators: equalsEmptyOperators(),
       },
@@ -61,7 +64,7 @@ export const WrapTokenTransactionsList = () => {
         field: 'paymentId',
         headerName: 'Payment ID:',
         display: 'flex',
-        flex: 1,
+        flex: 0.6,
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.paymentId} />;
         },
@@ -71,7 +74,7 @@ export const WrapTokenTransactionsList = () => {
         field: 'from',
         headerName: 'From Address:',
         display: 'flex',
-        flex: 1,
+        flex: 0.6,
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.from} />;
         },
@@ -81,7 +84,7 @@ export const WrapTokenTransactionsList = () => {
         field: 'to',
         headerName: 'To Address:',
         display: 'flex',
-        flex: 1,
+        flex: 0.6,
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.to} />;
         },
@@ -93,7 +96,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
-        flex: 0.3,
+        flex: 0.41,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
         },
@@ -105,7 +108,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
-        flex: 0.4,
+        flex: 0.41,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
         },
@@ -117,7 +120,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
-        flex: 0.4,
+        flex: 0.35,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
         },
@@ -127,7 +130,8 @@ export const WrapTokenTransactionsList = () => {
         field: 'transactionHash',
         headerName: 'Transaction Hash:',
         display: 'flex',
-        flex: 0.5,
+        align: 'center',
+        flex: 0.6,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
@@ -136,6 +140,19 @@ export const WrapTokenTransactionsList = () => {
               <TruncatedAddress address={row.transactionHash || ''} startChars={5} endChars={7} />
             </BlockchainExplorerLink>
           );
+        },
+      },
+      {
+        field: 'blockHeight',
+        headerName: 'Block Height:',
+        display: 'flex',
+        align: 'center',
+        headerAlign: 'left',
+        flex: 0.31,
+        filterable: false,
+        sortable: false,
+        renderCell: ({ row }) => {
+          return <Typography>{row.tariBlockHeight}</Typography>;
         },
       },
       {
@@ -149,12 +166,24 @@ export const WrapTokenTransactionsList = () => {
         },
         filterOperators: equalsEmptyOperators(),
       },
-
+      {
+        field: 'origin',
+        headerName: 'Origin:',
+        display: 'flex',
+        align: 'center',
+        justifyContent: 'center',
+        flex: 0.4,
+        renderCell: ({ row }) => {
+          return <WrapTokenTransactionOrigin status={row.origin} />;
+        },
+        filterOperators: equalsEmptyOperators(),
+      },
       {
         field: 'createdAt',
         headerName: 'Created At:',
         display: 'flex',
-        flex: 0.6,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
@@ -164,6 +193,7 @@ export const WrapTokenTransactionsList = () => {
         field: 'debug',
         headerName: 'Debug data:',
         display: 'flex',
+        align: 'center',
         flex: 0.2,
         renderCell: ({ row }) => {
           return row.debug ? <CheckCircleIcon color="warning" fontSize="medium" /> : null;
