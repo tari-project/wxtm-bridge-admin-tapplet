@@ -4,8 +4,8 @@ import { TruncatedAddressProps } from './types';
 
 export const TruncatedAddress = ({
   address,
-  startChars = 7,
-  endChars = 7,
+  startChars = 6,
+  endChars = 6,
 }: TruncatedAddressProps) => {
   if (!address) return null;
 
