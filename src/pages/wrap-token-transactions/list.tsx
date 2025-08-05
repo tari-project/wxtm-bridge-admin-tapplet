@@ -64,7 +64,8 @@ export const WrapTokenTransactionsList = () => {
         field: 'paymentId',
         headerName: 'Payment ID:',
         display: 'flex',
-        flex: 0.6,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.paymentId} />;
         },
@@ -74,7 +75,8 @@ export const WrapTokenTransactionsList = () => {
         field: 'from',
         headerName: 'From Address:',
         display: 'flex',
-        flex: 0.6,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.from} />;
         },
@@ -84,7 +86,8 @@ export const WrapTokenTransactionsList = () => {
         field: 'to',
         headerName: 'To Address:',
         display: 'flex',
-        flex: 0.6,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.to} />;
         },
@@ -96,7 +99,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
-        flex: 0.41,
+        flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
         },
@@ -108,7 +111,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
-        flex: 0.41,
+        flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
         },
@@ -120,7 +123,7 @@ export const WrapTokenTransactionsList = () => {
         display: 'flex',
         align: 'right',
         headerAlign: 'right',
-        flex: 0.35,
+        flex: 0.45,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
         },
@@ -131,7 +134,7 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Transaction Hash:',
         display: 'flex',
         align: 'center',
-        flex: 0.6,
+        flex: 0.5,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
