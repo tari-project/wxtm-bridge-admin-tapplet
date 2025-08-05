@@ -39,7 +39,11 @@ export const WrapTokenTransactionDataTab = ({
   return (
     <>
       <Stack direction="row" justifyContent="space-between" mb={5}>
-        <WrapTokenTransactionStatus status={transaction.status} size="medium" />
+        <WrapTokenTransactionStatus
+          status={transaction.status}
+          size="medium"
+          sx={{ width: 'auto', minWidth: 150 }}
+        />
         <Button
           variant="contained"
           color="success"
@@ -54,6 +58,16 @@ export const WrapTokenTransactionDataTab = ({
         <TextField
           label="Payment ID"
           value={transaction.paymentId}
+          slotProps={{ input: { readOnly: true } }}
+        />
+        <TextField
+          label="Incoming Payment ID"
+          value={transaction.incomingPaymentId}
+          slotProps={{ input: { readOnly: true } }}
+        />
+        <TextField
+          label="Payment Ref"
+          value={transaction.tariPaymentReference}
           slotProps={{ input: { readOnly: true } }}
         />
         <TextField

@@ -5,4 +5,5 @@ import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-ap
 export type WrapTokenTransactionStatusProps = {
   status: WrapTokenTransactionEntity.status;
   size?: ChipProps['size'];
+  sx?: ChipProps['sx'];
 };
