@@ -18,13 +18,29 @@ export const settingsDataProvider: DataProvider = {
     throw new Error('create method is not implemented in safeTransactionsDataProvider');
   },
 
-  update: async <TData = SettingsEntity, TVariables = { wrapTokensServiceStatus: ServiceStatus }>({
+  update: async <
+    TData = SettingsEntity,
+    TVariables = {
+      wrapTokensServiceStatus: ServiceStatus;
+      maxBatchSize: number;
+      maxBatchAgeMs: number;
+      batchAmountThreshold: string;
+    },
+  >({
     variables,
   }: UpdateParams<TVariables>): Promise<UpdateResponse<TData>> => {
-    const typedVars = variables as { wrapTokensServiceStatus: ServiceStatus };
+    const typedVars = variables as {
+      wrapTokensServiceStatus: ServiceStatus;
+      maxBatchSize: number;
+      maxBatchAgeMs: number;
+      batchAmountThreshold: string;
+    };
 
     await SettingsService.updateSettings({
       wrapTokensServiceStatus: typedVars.wrapTokensServiceStatus,
+      maxBatchSize: typedVars.maxBatchSize,
+      maxBatchAgeMs: typedVars.maxBatchAgeMs,
+      batchAmountThreshold: typedVars.batchAmountThreshold,
     });
 
     return {
