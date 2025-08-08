@@ -35,16 +35,22 @@ export const TokensUnwrappedList = () => {
         field: 'subgraphId',
         headerName: 'Subgraph ID:',
         display: 'flex',
-        flex: 1,
+        align: 'center',
+        flex: 0.3,
         filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'from',
         headerName: 'From Address:',
         display: 'flex',
-        flex: 1,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
-          return <BlockchainExplorerLink address={row.from}>{row.from}</BlockchainExplorerLink>;
+          return (
+            <BlockchainExplorerLink address={row.from}>
+              <TruncatedAddress address={row.from} />
+            </BlockchainExplorerLink>
+          );
         },
         filterOperators: equalsEmptyOperators(),
       },
@@ -52,7 +58,8 @@ export const TokensUnwrappedList = () => {
         field: 'targetTariAddress',
         headerName: 'To Address:',
         display: 'flex',
-        flex: 1,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
           return <TruncatedAddress address={row.targetTariAddress} />;
         },
@@ -62,9 +69,9 @@ export const TokensUnwrappedList = () => {
         field: 'amount',
         headerName: 'Tokens:',
         display: 'flex',
-        align: 'right',
-        headerAlign: 'right',
-        flex: 0.4,
+        align: 'center',
+        headerAlign: 'left',
+        flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amount, 18)}</Typography>;
         },
@@ -76,7 +83,8 @@ export const TokensUnwrappedList = () => {
         headerName: 'Status:',
         display: 'flex',
         justifyContent: 'center',
-        flex: 0.8,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
           return <TokensUnwrappedStatus status={row.status} />;
         },
@@ -87,7 +95,8 @@ export const TokensUnwrappedList = () => {
         headerName: 'Block Number:',
         display: 'flex',
         justifyContent: 'center',
-        flex: 0.8,
+        align: 'center',
+        flex: 0.31,
         filterOperators: equalsEmptyOperators(),
       },
 
@@ -95,7 +104,8 @@ export const TokensUnwrappedList = () => {
         field: 'blockTimestamp',
         headerName: 'Block Timestamp:',
         display: 'flex',
-        flex: 0.6,
+        align: 'center',
+        flex: 0.5,
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;
         },
@@ -106,6 +116,7 @@ export const TokensUnwrappedList = () => {
         field: 'createdAt',
         headerName: 'Created At:',
         display: 'flex',
+        align: 'center',
         flex: 0.6,
         renderCell: ({ row }) => {
           return <DateFormatedField date={row.createdAt} />;

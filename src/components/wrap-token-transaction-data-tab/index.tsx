@@ -62,12 +62,12 @@ export const WrapTokenTransactionDataTab = ({
         />
         <TextField
           label="Incoming Payment ID"
-          value={transaction.incomingPaymentId}
+          value={transaction.incomingPaymentId || '-'}
           slotProps={{ input: { readOnly: true } }}
         />
         <TextField
           label="Payment Ref"
-          value={transaction.tariPaymentReference}
+          value={transaction.tariPaymentReference || '-'}
           slotProps={{ input: { readOnly: true } }}
         />
         <TextField

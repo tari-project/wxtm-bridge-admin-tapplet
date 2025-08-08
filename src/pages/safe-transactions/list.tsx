@@ -7,6 +7,7 @@ import { useNavigation } from '@refinedev/core';
 
 import { SafeTransaction } from '../../providers/safe-transactions-data-provider';
 import { BlockchainExplorerLink } from '../../components/blockchain-explorer-link';
+import { TruncatedAddress } from '../../components/truncated-address';
 import { SafeTransactionStatus } from '../../components/safe-transaction-status';
 import { decodeWXTMTokenCalldata } from '../../helpers/decode-wxtm-token-calldata';
 import { DateFormatedField } from '../../components/date-formated-field';
@@ -24,13 +25,14 @@ export const SafeTransactionsList = () => {
         field: 'transactionHash',
         headerName: 'Transaction Hash:',
         display: 'flex',
-        flex: 2,
+        align: 'center',
+        flex: 0.6,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
           return (
             <BlockchainExplorerLink txHash={row.transactionHash}>
-              {row.transactionHash}
+              <TruncatedAddress address={row.transactionHash || ''} />
             </BlockchainExplorerLink>
           );
         },
@@ -39,6 +41,7 @@ export const SafeTransactionsList = () => {
         field: 'nonce',
         headerName: 'Nonce:',
         display: 'flex',
+        align: 'center',
         flex: 0.3,
         filterable: false,
         sortable: false,
@@ -47,6 +50,7 @@ export const SafeTransactionsList = () => {
         field: '1',
         headerName: 'Operation:',
         display: 'flex',
+        align: 'center',
         flex: 0.7,
         filterable: false,
         sortable: false,
@@ -63,13 +67,18 @@ export const SafeTransactionsList = () => {
         field: '2',
         headerName: 'To Address:',
         display: 'flex',
-        flex: 1,
+        align: 'center',
+        flex: 0.6,
         filterable: false,
         sortable: false,
         renderCell: ({ row }) => {
           const address =
             decodeWXTMTokenCalldata({ data: row.data })?.parameters[0]?.value || 'N/A';
-          return <BlockchainExplorerLink address={address}>{address}</BlockchainExplorerLink>;
+          return (
+            <BlockchainExplorerLink address={address}>
+              <TruncatedAddress address={address} />
+            </BlockchainExplorerLink>
+          );
         },
       },
 
@@ -77,6 +86,7 @@ export const SafeTransactionsList = () => {
         field: '3',
         headerName: 'Token Amount:',
         display: 'flex',
+        align: 'center',
         flex: 1,
         filterable: false,
         sortable: false,
@@ -95,6 +105,7 @@ export const SafeTransactionsList = () => {
         field: '4',
         headerName: 'Signatures:',
         display: 'flex',
+        align: 'center',
         flex: 0.4,
         filterable: false,
         sortable: false,
@@ -104,6 +115,7 @@ export const SafeTransactionsList = () => {
         field: '5',
         headerName: 'Status:  ',
         display: 'flex',
+        align: 'center',
         flex: 0.5,
         filterable: false,
         sortable: false,
@@ -116,6 +128,7 @@ export const SafeTransactionsList = () => {
         headerName: 'Submitted At:',
         type: 'string',
         display: 'flex',
+        align: 'center',
         flex: 0.7,
         filterable: false,
         sortable: false,
@@ -128,6 +141,7 @@ export const SafeTransactionsList = () => {
         headerName: 'Executed At:',
         type: 'string',
         display: 'flex',
+        align: 'center',
         flex: 0.7,
         filterable: false,
         sortable: false,

@@ -13,7 +13,7 @@ export const TruncatedAddress = ({
     return <span>{address}</span>;
   }
 
-  const truncated = `${address.substring(0, startChars)}....${address.substring(address.length - endChars)}`;
+  const truncated = `${address.substring(0, startChars)}...${address.substring(address.length - endChars)}`;
 
   return (
     <Tooltip title={address} arrow>
