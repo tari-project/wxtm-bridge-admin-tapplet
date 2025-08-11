@@ -67,12 +67,12 @@ export const WrapTokenTransactionStatus = ({
           label: 'Below Min Amount',
           color: 'default',
         };
-      case WrapTokenTransactionEntity.status.MINING_INCORECT_PAYMENT_ID:
+      case WrapTokenTransactionEntity.status.MINING_INCORRECT_PAYMENT_ID:
         return {
           label: 'Wrong Payment ID',
           color: 'default',
         };
-      case WrapTokenTransactionEntity.status.MINING_INCORECT_PAYMENT_ID_AND_AMOUNT:
+      case WrapTokenTransactionEntity.status.MINING_INCORRECT_PAYMENT_ID_AND_AMOUNT:
         return {
           label: 'Incorrect Amount And Payment ID',
           color: 'default',
