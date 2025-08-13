@@ -37,6 +37,18 @@ export const SettingsEdit = () => {
     return query?.data?.data.wrapTokensServiceStatus || ServiceStatus.OFFLINE;
   }, [query]);
 
+  const maxBatchSize = useMemo(() => {
+    return query?.data?.data.maxBatchSize || 50;
+  }, [query]);
+
+  const maxBatchAge = useMemo(() => {
+    return query?.data?.data.maxBatchAgeMs || 21_600_000; // 6 hours
+  }, [query]);
+
+  const batchAmountThreshold = useMemo(() => {
+    return query?.data?.data.batchAmountThreshold || '20000000000000000000000'; // 20_000 tokens
+  }, [query]);
+
   return (
     <Edit isLoading={formLoading} saveButtonProps={saveButtonProps} title="Settings">
       <Box sx={{ p: 2 }}>
@@ -83,13 +95,13 @@ export const SettingsEdit = () => {
         />
 
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Batch Configuration
+          Batch Execute Configuration
         </Typography>
 
         <Controller
           control={control}
           name="maxBatchSize"
-          defaultValue={50}
+          defaultValue={maxBatchSize}
           rules={{
             required: 'Max batch size is required',
             min: { value: 2, message: 'Must be at least 2' },
@@ -99,12 +111,22 @@ export const SettingsEdit = () => {
             <TextField
               {...field}
               fullWidth
-              sx={{ maxWidth: 320, mb: 3 }}
+              sx={{ maxWidth: 320, mr: 3 }}
               label="Max Batch Size"
-              type="number"
               error={!!fieldState.error}
               helperText={fieldState.error?.message || 'Default: 50 transactions per batch'}
-              onChange={(e) => field.onChange(Number(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || /^\d+$/.test(value)) {
+                  field.onChange(value === '' ? '' : Number(value));
+                }
+              }}
+              slotProps={{
+                htmlInput: {
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                },
+              }}
             />
           )}
         />
@@ -112,21 +134,31 @@ export const SettingsEdit = () => {
         <Controller
           control={control}
           name="maxBatchAgeMs"
-          defaultValue={21600000}
+          defaultValue={maxBatchAge}
           rules={{
             required: 'Max batch age is required',
-            min: { value: 60000, message: 'Must be at least 60000ms (1 minute)' },
+            min: { value: 60_000, message: 'Must be at least 60000ms (1 minute)' },
           }}
           render={({ field, fieldState }) => (
             <TextField
-              {...field}
+              value={field.value ? Math.round(field.value / 3600000) : ''}
               fullWidth
-              sx={{ maxWidth: 320, mb: 3 }}
-              label="Max Batch Age (ms)"
-              type="number"
+              sx={{ maxWidth: 320, mr: 3 }}
+              label="Max Batch Age (hours)"
               error={!!fieldState.error}
-              helperText={fieldState.error?.message || 'Default: 21600000ms (6 hours)'}
-              onChange={(e) => field.onChange(Number(e.target.value))}
+              helperText={fieldState.error?.message || 'Default: 6 hours'}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || /^\d+$/.test(value)) {
+                  field.onChange(value === '' ? '' : Number(value) * 3600000);
+                }
+              }}
+              slotProps={{
+                htmlInput: {
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                },
+              }}
             />
           )}
         />
@@ -134,9 +166,17 @@ export const SettingsEdit = () => {
         <Controller
           control={control}
           name="batchAmountThreshold"
-          defaultValue="20000000000000000000000"
+          defaultValue={batchAmountThreshold}
           rules={{
             required: 'Batch amount threshold is required',
+            min: {
+              value: '1000000000000000000000',
+              message: 'Min batch threshold is 1 000 tokens',
+            },
+            max: {
+              value: '5000000000000000000000000',
+              message: 'Max batch threshold is 50 000 tokens',
+            },
             pattern: {
               value: /^\d+$/,
               message: 'Must be a valid number',
@@ -144,15 +184,24 @@ export const SettingsEdit = () => {
           }}
           render={({ field, fieldState }) => (
             <TextField
-              {...field}
+              value={field.value ? field.value.slice(0, -18) || '0' : ''}
               fullWidth
               sx={{ maxWidth: 320 }}
-              label="Batch Amount Threshold (wei)"
+              label="Batch Amount Threshold (tokens)"
               error={!!fieldState.error}
-              helperText={
-                fieldState.error?.message ||
-                'Default: 20000000000000000000000 (20k tokens with 18 decimals)'
-              }
+              helperText={fieldState.error?.message || 'Default: 20 000 tokens'}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || /^\d+$/.test(value)) {
+                  field.onChange(value === '' ? '' : value + '000000000000000000');
+                }
+              }}
+              slotProps={{
+                htmlInput: {
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                },
+              }}
             />
           )}
         />
