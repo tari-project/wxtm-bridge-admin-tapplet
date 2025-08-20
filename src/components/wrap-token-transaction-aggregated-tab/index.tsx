@@ -1,18 +1,14 @@
-import { Box, List, Paper, Typography } from '@mui/material';
+import { List, Typography } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import { utils } from 'ethers';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-api';
 
-import { ColorModeContext } from '../../contexts/color-mode';
 import { WrapTokenTransactionDebugTabProps } from './types';
 import { WrapTokenTransactionStatus } from '../wrap-token-transaction-status';
 import { WrapTokenTransactionOrigin } from '../origin-badge';
-import { TruncatedAddress } from '../truncated-address';
 import { DateFormatedField } from '../date-formated-field';
-import { BlockchainExplorerLink } from '../blockchain-explorer-link';
 
 export const WrapTokenTransactionAggregatedTab = ({
   transaction,
