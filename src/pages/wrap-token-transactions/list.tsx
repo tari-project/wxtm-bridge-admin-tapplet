@@ -189,7 +189,21 @@ export const WrapTokenTransactionsList = () => {
         flex: 0.1,
         renderCell: ({ row }) => {
           return row.aggregatedTransactions.length ? (
-            <Typography>{row.aggregatedTransactions.length}</Typography>
+            <Typography
+              component="span"
+              sx={{
+                bgcolor: 'success.main',
+                color: 'white',
+                borderRadius: '50%',
+                width: 30,
+                height: 30,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {row.aggregatedTransactions.length}
+            </Typography>
           ) : null;
         },
         filterOperators: equalsEmptyOperators(),
