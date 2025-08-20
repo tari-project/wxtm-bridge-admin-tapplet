@@ -163,7 +163,7 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Status:',
         display: 'flex',
         justifyContent: 'center',
-        flex: 0.6,
+        flex: 0.7,
         renderCell: ({ row }) => {
           return <WrapTokenTransactionStatus status={row.status} />;
         },
@@ -177,7 +177,20 @@ export const WrapTokenTransactionsList = () => {
         justifyContent: 'center',
         flex: 0.4,
         renderCell: ({ row }) => {
-          return <WrapTokenTransactionOrigin status={row.origin} />;
+          return <WrapTokenTransactionOrigin origin={row.origin} />;
+        },
+        filterOperators: equalsEmptyOperators(),
+      },
+      {
+        field: 'Aggregated',
+        headerName: 'Aggregated',
+        display: 'flex',
+        align: 'center',
+        flex: 0.1,
+        renderCell: ({ row }) => {
+          return row.aggregatedTransactions.length ? (
+            <CheckCircleIcon color="success" fontSize="medium" />
+          ) : null;
         },
         filterOperators: equalsEmptyOperators(),
       },

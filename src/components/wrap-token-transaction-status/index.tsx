@@ -77,6 +77,11 @@ export const WrapTokenTransactionStatus = ({
           label: 'Incorrect Amount And Payment ID',
           color: 'default',
         };
+      case WrapTokenTransactionEntity.status.REPLACED_BY_AGGREGATED:
+        return {
+          label: 'Replaced By Aggregating',
+          color: 'success',
+        };
       default:
         return {
           label: status || 'Unknown',
@@ -90,7 +95,7 @@ export const WrapTokenTransactionStatus = ({
       label={label}
       color={color as ChipProps['color']}
       size={size}
-      sx={{ width: 150, display: 'flex', ...sx }}
+      sx={{ width: '100%', display: 'flex', ...sx }}
     />
   );
 };
