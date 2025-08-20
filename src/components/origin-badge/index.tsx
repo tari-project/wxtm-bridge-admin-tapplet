@@ -6,11 +6,11 @@ import { WrapTokenTransactionEntity } from '@tari-project/wxtm-bridge-backend-ap
 import { WrapTokenTransactionOriginProps } from './types';
 
 export const WrapTokenTransactionOrigin = ({
-  status,
+  origin,
   size = 'small',
 }: WrapTokenTransactionOriginProps) => {
   const { label, color } = useMemo(() => {
-    switch (status) {
+    switch (origin) {
       case WrapTokenTransactionEntity.origin.BRIDGE:
         return {
           label: 'Bridge',
@@ -24,11 +24,11 @@ export const WrapTokenTransactionOrigin = ({
 
       default:
         return {
-          label: status || 'Unknown',
+          label: origin || 'Unknown',
           color: 'default',
         };
     }
-  }, [status]);
+  }, [origin]);
 
   return (
     <Chip
