@@ -189,7 +189,7 @@ export const WrapTokenTransactionsList = () => {
         flex: 0.1,
         renderCell: ({ row }) => {
           return row.aggregatedTransactions.length ? (
-            <CheckCircleIcon color="success" fontSize="medium" />
+            <Typography>{row.aggregatedTransactions.length}</Typography>
           ) : null;
         },
         filterOperators: equalsEmptyOperators(),
