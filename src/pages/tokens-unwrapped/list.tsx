@@ -19,7 +19,7 @@ export const TokensUnwrappedList = () => {
     sorters: {
       initial: [
         {
-          field: 'createdAt',
+          field: 'nonce',
           order: 'desc',
         },
       ],
@@ -32,8 +32,8 @@ export const TokensUnwrappedList = () => {
   const columns = React.useMemo<GridColDef<TokensUnwrappedEntity>[]>(
     () => [
       {
-        field: 'subgraphId',
-        headerName: 'Subgraph ID:',
+        field: 'nonce',
+        headerName: 'Nonce:',
         display: 'flex',
         align: 'center',
         flex: 0.3,
@@ -91,6 +91,21 @@ export const TokensUnwrappedList = () => {
         filterOperators: equalsEmptyOperators(),
       },
       {
+        field: 'transactionHash',
+        headerName: 'Transaction Hash:',
+        display: 'flex',
+        align: 'center',
+        flex: 0.5,
+        renderCell: ({ row }) => {
+          return (
+            <BlockchainExplorerLink txHash={row.transactionHash}>
+              <TruncatedAddress address={row.transactionHash} />
+            </BlockchainExplorerLink>
+          );
+        },
+        filterOperators: equalsEmptyOperators(),
+      },
+      {
         field: 'blockNumber',
         headerName: 'Block Number:',
         display: 'flex',
@@ -107,7 +122,7 @@ export const TokensUnwrappedList = () => {
         align: 'center',
         flex: 0.5,
         renderCell: ({ row }) => {
-          return <DateFormatedField date={row.createdAt} />;
+          return <DateFormatedField date={row.blockTimestamp} />;
         },
         filterable: false,
       },

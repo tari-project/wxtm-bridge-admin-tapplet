@@ -89,7 +89,11 @@ export const WrapTokenTransactionsList = () => {
         align: 'center',
         flex: 0.5,
         renderCell: ({ row }) => {
-          return <TruncatedAddress address={row.to} />;
+          return (
+            <BlockchainExplorerLink address={row.to}>
+              <TruncatedAddress address={row.to} />
+            </BlockchainExplorerLink>
+          );
         },
         filterOperators: equalsEmptyOperators(),
       },
@@ -193,7 +197,7 @@ export const WrapTokenTransactionsList = () => {
               component="span"
               sx={{
                 bgcolor: 'success.main',
-                color: 'white',
+                color: 'success.contrastText',
                 borderRadius: '50%',
                 width: 30,
                 height: 30,

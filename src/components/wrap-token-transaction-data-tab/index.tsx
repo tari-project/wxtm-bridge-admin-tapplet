@@ -106,7 +106,7 @@ export const WrapTokenTransactionDataTab = ({
 
         <TextField
           label="Tokens Received"
-          value={`${utils.formatUnits(transaction.tokenAmount, 6).toString()} wXTM`}
+          value={`${utils.formatUnits(transaction.tokenAmount, 6).toString()} XTM`}
           slotProps={{ input: { readOnly: true } }}
         />
 
@@ -114,7 +114,7 @@ export const WrapTokenTransactionDataTab = ({
           transaction.tokenAmountInWallet !== transaction.tokenAmount && (
             <TextField
               label="Tokens Received in Wallet"
-              value={`${utils.formatUnits(transaction.tokenAmountInWallet, 6).toString()} wXTM`}
+              value={`${utils.formatUnits(transaction.tokenAmountInWallet, 6).toString()} XTM`}
               slotProps={{ input: { readOnly: true } }}
               sx={{
                 '& .MuiOutlinedInput-root': {
@@ -134,7 +134,7 @@ export const WrapTokenTransactionDataTab = ({
 
         <TextField
           label="Fee Amount"
-          value={`${utils.formatUnits(transaction.feeAmount, 6).toString()} wXTM`}
+          value={`${utils.formatUnits(transaction.feeAmount, 6).toString()} XTM`}
           slotProps={{ input: { readOnly: true } }}
         />
 
