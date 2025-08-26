@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import { utils } from 'ethers';
 import ReactJsonView from '@microlink/react-json-view';
