@@ -2,14 +2,26 @@ import { useMemo } from 'react';
 import { List } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-// import { TokensUnwrappedAuditEntity } from '@tari-project/wxtm-bridge-backend-api';
+import { TokensUnwrappedAuditEntity } from '@tari-project/wxtm-bridge-backend-api';
 
-// import { DateFormatedField } from '../date-formated-field';
-// import { formatTimeElapsed } from '../../helpers/format-time-elapsed';
-//import { TokensUnwrappedTransactionAuditTabProps } from './types';
+import { DateFormatedField } from '../date-formated-field';
+import { formatTimeElapsed } from '../../helpers/format-time-elapsed';
+import { TokensUnwrappedTransactionAuditTabProps } from './types';
 
-export const TokensUnwrappedTransactionAuditTab = () => {
-  const columns = useMemo<GridColDef[]>(
+export const TokensUnwrappedTransactionAuditTab = ({
+  transaction,
+}: TokensUnwrappedTransactionAuditTabProps) => {
+  console.log('TokensUnwrapped transaction:', transaction);
+
+  const audits = useMemo(() => {
+    return [...transaction.audits].sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateA.getTime() - dateB.getTime();
+    });
+  }, [transaction]);
+
+  const columns = useMemo<GridColDef<TokensUnwrappedAuditEntity>[]>(
     () => [
       {
         field: 'fromStatus',
@@ -26,7 +38,17 @@ export const TokensUnwrappedTransactionAuditTab = () => {
         headerName: 'Time Elapsed:',
         minWidth: 150,
         renderCell: ({ row }) => {
-          return <>{row?.note?.error}</>;
+          const index = audits.findIndex((audit) => audit.id === row.id);
+
+          if (index === 0) {
+            return 'N/A';
+          }
+
+          const currentRowDate = new Date(row.createdAt);
+          const prevRowDate = new Date(audits[index - 1].createdAt);
+          const diffMs = currentRowDate.getTime() - prevRowDate.getTime();
+
+          return formatTimeElapsed(diffMs);
         },
       },
       {
@@ -34,7 +56,17 @@ export const TokensUnwrappedTransactionAuditTab = () => {
         headerName: 'Total Time:',
         minWidth: 150,
         renderCell: ({ row }) => {
-          return <>{row?.note?.error}</>;
+          const index = audits.findIndex((audit) => audit.id === row.id);
+
+          if (index === 0) {
+            return '0m';
+          }
+
+          const currentRowDate = new Date(row.createdAt);
+          const firstRowDate = new Date(audits[0].createdAt);
+          const diffMs = currentRowDate.getTime() - firstRowDate.getTime();
+
+          return formatTimeElapsed(diffMs);
         },
       },
       {
@@ -43,7 +75,7 @@ export const TokensUnwrappedTransactionAuditTab = () => {
         display: 'flex',
         minWidth: 150,
         renderCell: ({ row }) => {
-          return <div>{row?.note?.error}</div>;
+          return <DateFormatedField date={row.createdAt} />;
         },
       },
       {
@@ -56,12 +88,13 @@ export const TokensUnwrappedTransactionAuditTab = () => {
         },
       },
     ],
-    []
+    [audits]
   );
 
   return (
     <List>
       <DataGrid
+        rows={audits}
         columns={columns}
         hideFooter
         disableColumnFilter

@@ -139,7 +139,7 @@ export const WrapTokenTransactionDataTab = ({
         />
 
         <TextField
-          label="Amount To Send"
+          label="Amount To Mint"
           value={`${utils.formatUnits(transaction.amountAfterFee, 6).toString()} wXTM`}
           slotProps={{ input: { readOnly: true } }}
         />

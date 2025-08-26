@@ -43,7 +43,7 @@ export const TokensUnwrappedEdit = () => {
           </TabPanel>
 
           <TabPanel value="1" sx={{ px: 0 }}>
-            <TokensUnwrappedTransactionAuditTab />
+            <TokensUnwrappedTransactionAuditTab transaction={transaction} />
           </TabPanel>
         </TabContext>
       )}

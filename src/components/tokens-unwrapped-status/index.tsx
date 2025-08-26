@@ -27,15 +27,25 @@ export const TokensUnwrappedStatus = ({
           label: 'Confirmed',
           color: 'secondary',
         };
-      case TokensUnwrappedEntity.status.TOKENS_BURNED:
+      case TokensUnwrappedEntity.status.CONFIRMED_AWAITING_APPROVAL:
         return {
-          label: 'Tokens Burned',
-          color: 'error',
+          label: 'Confirmed Awaiting Approval',
+          color: 'warning',
         };
-      case TokensUnwrappedEntity.status.TOKENS_MINTED:
+      case TokensUnwrappedEntity.status.SENDING_TOKENS:
         return {
-          label: 'Tokens Minted',
+          label: 'Sending Tokens',
+          color: 'secondary',
+        };
+      case TokensUnwrappedEntity.status.TOKENS_SENT:
+        return {
+          label: 'Tokens Sent',
           color: 'success',
+        };
+      case TokensUnwrappedEntity.status.UNPROCESSABLE:
+        return {
+          label: 'Unprocessable',
+          color: 'error',
         };
     }
   }, [status]);
