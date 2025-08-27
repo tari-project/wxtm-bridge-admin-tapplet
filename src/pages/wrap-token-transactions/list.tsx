@@ -102,7 +102,6 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Tokens Received:',
         display: 'flex',
         align: 'right',
-        headerAlign: 'right',
         flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.tokenAmount, 6)}</Typography>;
@@ -114,7 +113,6 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Fee:',
         display: 'flex',
         align: 'right',
-        headerAlign: 'right',
         flex: 0.45,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
@@ -126,7 +124,6 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Tokens to Mint:',
         display: 'flex',
         align: 'right',
-        headerAlign: 'right',
         flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
@@ -154,7 +151,6 @@ export const WrapTokenTransactionsList = () => {
         headerName: 'Block Height:',
         display: 'flex',
         align: 'center',
-        headerAlign: 'left',
         flex: 0.31,
         filterable: false,
         sortable: false,

@@ -74,7 +74,6 @@ export const TokensUnwrappedList = () => {
         headerName: 'Tokens Burned:',
         display: 'flex',
         align: 'right',
-        headerAlign: 'left',
         flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amount, 18)}</Typography>;
@@ -87,7 +86,6 @@ export const TokensUnwrappedList = () => {
         headerName: 'Fee:',
         display: 'flex',
         align: 'right',
-        headerAlign: 'right',
         flex: 0.45,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 18)}</Typography>;
@@ -100,7 +98,6 @@ export const TokensUnwrappedList = () => {
         headerName: 'Tokens To Send:',
         display: 'flex',
         align: 'right',
-        headerAlign: 'right',
         flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amountAfterFee, 18)}</Typography>;
