@@ -110,18 +110,6 @@ export const WrapTokenTransactionsList = () => {
         filterOperators: containsEqualsEmptyOperators(),
       },
       {
-        field: 'amountAfterFee',
-        headerName: 'Tokens to Mint:',
-        display: 'flex',
-        align: 'right',
-        headerAlign: 'right',
-        flex: 0.51,
-        renderCell: ({ row }) => {
-          return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
-        },
-        filterOperators: containsEqualsEmptyOperators(),
-      },
-      {
         field: 'feeAmount',
         headerName: 'Fee:',
         display: 'flex',
@@ -130,6 +118,18 @@ export const WrapTokenTransactionsList = () => {
         flex: 0.45,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.feeAmount, 6)}</Typography>;
+        },
+        filterOperators: containsEqualsEmptyOperators(),
+      },
+      {
+        field: 'amountAfterFee',
+        headerName: 'Tokens to Mint:',
+        display: 'flex',
+        align: 'right',
+        headerAlign: 'right',
+        flex: 0.51,
+        renderCell: ({ row }) => {
+          return <Typography>{utils.formatUnits(row.amountAfterFee, 6)}</Typography>;
         },
         filterOperators: containsEqualsEmptyOperators(),
       },

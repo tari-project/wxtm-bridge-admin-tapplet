@@ -12,7 +12,10 @@ import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
 import { TokensUnwrappedStatus } from '../../components/tokens-unwrapped-status';
 
-import { equalsEmptyOperators } from '../../helpers/allowed-operators';
+import {
+  equalsEmptyOperators,
+  containsEqualsEmptyOperators,
+} from '../../helpers/allowed-operators';
 
 export const TokensUnwrappedList = () => {
   const { dataGridProps } = useDataGrid({
@@ -65,19 +68,46 @@ export const TokensUnwrappedList = () => {
         },
         filterOperators: equalsEmptyOperators(),
       },
+      /** @TODO Fix filtering by amount for tokens unwrapped */
       {
         field: 'amount',
-        headerName: 'Tokens:',
+        headerName: 'Tokens Burned:',
         display: 'flex',
-        align: 'center',
+        align: 'right',
         headerAlign: 'left',
         flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amount, 18)}</Typography>;
         },
         filterable: false,
+        filterOperators: containsEqualsEmptyOperators(),
       },
-
+      {
+        field: 'feeAmount',
+        headerName: 'Fee:',
+        display: 'flex',
+        align: 'right',
+        headerAlign: 'right',
+        flex: 0.45,
+        renderCell: ({ row }) => {
+          return <Typography>{utils.formatUnits(row.feeAmount, 18)}</Typography>;
+        },
+        filterable: false,
+        filterOperators: containsEqualsEmptyOperators(),
+      },
+      {
+        field: 'amountAfterFee',
+        headerName: 'Tokens To Send:',
+        display: 'flex',
+        align: 'right',
+        headerAlign: 'right',
+        flex: 0.51,
+        renderCell: ({ row }) => {
+          return <Typography>{utils.formatUnits(row.amountAfterFee, 18)}</Typography>;
+        },
+        filterable: false,
+        filterOperators: containsEqualsEmptyOperators(),
+      },
       {
         field: 'status',
         headerName: 'Status:',
@@ -114,7 +144,6 @@ export const TokensUnwrappedList = () => {
         flex: 0.31,
         filterOperators: equalsEmptyOperators(),
       },
-
       {
         field: 'blockTimestamp',
         headerName: 'Block Timestamp:',
@@ -126,7 +155,6 @@ export const TokensUnwrappedList = () => {
         },
         filterable: false,
       },
-
       {
         field: 'createdAt',
         headerName: 'Created At:',

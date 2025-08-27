@@ -106,7 +106,7 @@ export const TokensUnwrappedTransactionDataTab = ({
         />
 
         <TextField
-          label="Amount To Unlock"
+          label="Tokens To Send"
           value={`${utils.formatUnits(transaction.amountAfterFee, 18).toString()} XTM`}
           slotProps={{ input: { readOnly: true } }}
         />
