@@ -1,19 +1,16 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
-import { useNavigation } from '@refinedev/core';
 import { utils } from 'ethers';
 import ReactJsonView from '@microlink/react-json-view';
 
-import { WrapTokenTransactionStatus } from '../wrap-token-transaction-status';
-import { WrapTokenTransactionDataTabProps } from './types';
+import { TokensUnwrappedStatus } from '../tokens-unwrapped-status';
+import { TokensUnwrappedTransactionDataTabProps } from './types';
 import { BlockchainExplorerLink } from '../blockchain-explorer-link';
 
-export const WrapTokenTransactionDataTab = ({
+export const TokensUnwrappedTransactionDataTab = ({
   transaction,
   saveButtonProps,
-}: WrapTokenTransactionDataTabProps) => {
-  const { push } = useNavigation();
-
+}: TokensUnwrappedTransactionDataTabProps) => {
   const hasError = useMemo(() => {
     return !!transaction?.error?.length;
   }, [transaction]);
@@ -26,50 +23,38 @@ export const WrapTokenTransactionDataTab = ({
     [saveButtonProps]
   );
 
-  const canNavigateToSafeTransaction = useMemo(() => {
-    return !!transaction?.safeTxHash;
-  }, [transaction]);
-
-  const navigateToSafeTransaction = useCallback(() => {
-    if (transaction) {
-      push(`/safe-transactions/show/${transaction.safeTxHash}`);
-    }
-  }, [transaction, push]);
-
   return (
     <>
       <Stack direction="row" justifyContent="space-between" mb={5}>
-        <WrapTokenTransactionStatus
+        <TokensUnwrappedStatus
           status={transaction.status}
           size="medium"
           sx={{ width: 'auto', minWidth: 150 }}
         />
-        <Button
-          variant="contained"
-          color="success"
-          onClick={navigateToSafeTransaction}
-          disabled={!canNavigateToSafeTransaction}
-        >
-          Show Safe Transaction
-        </Button>
       </Stack>
 
       <Stack gap={6} component="form" autoComplete="off">
         <TextField
-          label="Payment ID"
-          value={transaction.paymentId}
+          label="Nonce"
+          value={transaction.nonce}
           slotProps={{ input: { readOnly: true } }}
         />
         <TextField
-          label="Incoming Payment ID"
-          value={transaction.incomingPaymentId || '-'}
+          label="Subgraph ID"
+          value={transaction.subgraphId || '-'}
           slotProps={{ input: { readOnly: true } }}
         />
         <TextField
-          label="Payment Ref"
-          value={transaction.tariPaymentReference || '-'}
+          label="Signature"
+          value={transaction.signature}
           slotProps={{ input: { readOnly: true } }}
         />
+        <TextField
+          label="Contract Address"
+          value={transaction.contractAddress}
+          slotProps={{ input: { readOnly: true } }}
+        />
+
         <TextField
           label="From Address"
           value={transaction.from}
@@ -77,19 +62,7 @@ export const WrapTokenTransactionDataTab = ({
         />
         <TextField
           label="To Address"
-          value={transaction.to}
-          slotProps={{ input: { readOnly: true } }}
-        />
-
-        <TextField
-          label="Safe Nonce"
-          value={transaction.safeNonce || '-'}
-          slotProps={{ input: { readOnly: true } }}
-        />
-
-        <TextField
-          label="Safe Transaction Hash"
-          value={transaction.safeTxHash || '-'}
+          value={transaction.targetTariAddress}
           slotProps={{ input: { readOnly: true } }}
         />
 
@@ -103,28 +76,22 @@ export const WrapTokenTransactionDataTab = ({
             </BlockchainExplorerLink>
           </Box>
         )}
-
         <TextField
-          label="Tokens Received"
-          value={`${utils.formatUnits(transaction.tokenAmount, 6).toString()} XTM`}
+          label="Block Hash"
+          value={transaction.blockHash}
+          slotProps={{ input: { readOnly: true } }}
+        />
+        <TextField
+          label="Block Number"
+          value={transaction.blockNumber}
           slotProps={{ input: { readOnly: true } }}
         />
 
-        {transaction.tokenAmountInWallet &&
-          transaction.tokenAmountInWallet !== transaction.tokenAmount && (
-            <TextField
-              label="Tokens Received in Wallet"
-              value={`${utils.formatUnits(transaction.tokenAmountInWallet, 6).toString()} XTM`}
-              slotProps={{ input: { readOnly: true } }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'warning.main',
-                  },
-                },
-              }}
-            />
-          )}
+        <TextField
+          label="Tokens Burned"
+          value={`${utils.formatUnits(transaction.amount, 18).toString()} wXTM`}
+          slotProps={{ input: { readOnly: true } }}
+        />
 
         <TextField
           label="Fee %"
@@ -134,13 +101,13 @@ export const WrapTokenTransactionDataTab = ({
 
         <TextField
           label="Fee Amount"
-          value={`${utils.formatUnits(transaction.feeAmount, 6).toString()} XTM`}
+          value={`${utils.formatUnits(transaction.feeAmount, 18).toString()} XTM`}
           slotProps={{ input: { readOnly: true } }}
         />
 
         <TextField
-          label="Tokens To Mint"
-          value={`${utils.formatUnits(transaction.amountAfterFee, 6).toString()} wXTM`}
+          label="Tokens To Send"
+          value={`${utils.formatUnits(transaction.amountAfterFee, 18).toString()} XTM`}
           slotProps={{ input: { readOnly: true } }}
         />
 

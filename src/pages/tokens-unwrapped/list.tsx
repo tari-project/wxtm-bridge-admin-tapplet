@@ -12,14 +12,17 @@ import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
 import { TokensUnwrappedStatus } from '../../components/tokens-unwrapped-status';
 
-import { equalsEmptyOperators } from '../../helpers/allowed-operators';
+import {
+  equalsEmptyOperators,
+  containsEqualsEmptyOperators,
+} from '../../helpers/allowed-operators';
 
 export const TokensUnwrappedList = () => {
   const { dataGridProps } = useDataGrid({
     sorters: {
       initial: [
         {
-          field: 'createdAt',
+          field: 'nonce',
           order: 'desc',
         },
       ],
@@ -32,8 +35,8 @@ export const TokensUnwrappedList = () => {
   const columns = React.useMemo<GridColDef<TokensUnwrappedEntity>[]>(
     () => [
       {
-        field: 'subgraphId',
-        headerName: 'Subgraph ID:',
+        field: 'nonce',
+        headerName: 'Nonce:',
         display: 'flex',
         align: 'center',
         flex: 0.3,
@@ -65,19 +68,46 @@ export const TokensUnwrappedList = () => {
         },
         filterOperators: equalsEmptyOperators(),
       },
+      /** @TODO Fix filtering by amount for tokens unwrapped */
       {
         field: 'amount',
-        headerName: 'Tokens:',
+        headerName: 'Tokens Burned:',
         display: 'flex',
-        align: 'center',
+        align: 'right',
         headerAlign: 'left',
         flex: 0.51,
         renderCell: ({ row }) => {
           return <Typography>{utils.formatUnits(row.amount, 18)}</Typography>;
         },
         filterable: false,
+        filterOperators: containsEqualsEmptyOperators(),
       },
-
+      {
+        field: 'feeAmount',
+        headerName: 'Fee:',
+        display: 'flex',
+        align: 'right',
+        headerAlign: 'right',
+        flex: 0.45,
+        renderCell: ({ row }) => {
+          return <Typography>{utils.formatUnits(row.feeAmount, 18)}</Typography>;
+        },
+        filterable: false,
+        filterOperators: containsEqualsEmptyOperators(),
+      },
+      {
+        field: 'amountAfterFee',
+        headerName: 'Tokens To Send:',
+        display: 'flex',
+        align: 'right',
+        headerAlign: 'right',
+        flex: 0.51,
+        renderCell: ({ row }) => {
+          return <Typography>{utils.formatUnits(row.amountAfterFee, 18)}</Typography>;
+        },
+        filterable: false,
+        filterOperators: containsEqualsEmptyOperators(),
+      },
       {
         field: 'status',
         headerName: 'Status:',
@@ -91,6 +121,21 @@ export const TokensUnwrappedList = () => {
         filterOperators: equalsEmptyOperators(),
       },
       {
+        field: 'transactionHash',
+        headerName: 'Transaction Hash:',
+        display: 'flex',
+        align: 'center',
+        flex: 0.5,
+        renderCell: ({ row }) => {
+          return (
+            <BlockchainExplorerLink txHash={row.transactionHash}>
+              <TruncatedAddress address={row.transactionHash} />
+            </BlockchainExplorerLink>
+          );
+        },
+        filterOperators: equalsEmptyOperators(),
+      },
+      {
         field: 'blockNumber',
         headerName: 'Block Number:',
         display: 'flex',
@@ -99,7 +144,6 @@ export const TokensUnwrappedList = () => {
         flex: 0.31,
         filterOperators: equalsEmptyOperators(),
       },
-
       {
         field: 'blockTimestamp',
         headerName: 'Block Timestamp:',
@@ -107,11 +151,10 @@ export const TokensUnwrappedList = () => {
         align: 'center',
         flex: 0.5,
         renderCell: ({ row }) => {
-          return <DateFormatedField date={row.createdAt} />;
+          return <DateFormatedField date={row.blockTimestamp} />;
         },
         filterable: false,
       },
-
       {
         field: 'createdAt',
         headerName: 'Created At:',
