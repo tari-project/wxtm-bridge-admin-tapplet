@@ -111,7 +111,7 @@ export const TokensUnwrappedList = () => {
         display: 'flex',
         justifyContent: 'center',
         align: 'center',
-        flex: 0.5,
+        flex: 0.9,
         renderCell: ({ row }) => {
           return <TokensUnwrappedStatus status={row.status} />;
         },
@@ -141,16 +141,15 @@ export const TokensUnwrappedList = () => {
         flex: 0.31,
         filterOperators: equalsEmptyOperators(),
       },
+
       {
-        field: 'blockTimestamp',
-        headerName: 'Block Timestamp:',
+        field: 'tariBlockHeight',
+        headerName: 'Tari Block Number:',
         display: 'flex',
+        justifyContent: 'center',
         align: 'center',
-        flex: 0.5,
-        renderCell: ({ row }) => {
-          return <DateFormatedField date={row.blockTimestamp} />;
-        },
-        filterable: false,
+        flex: 0.31,
+        filterOperators: equalsEmptyOperators(),
       },
       {
         field: 'createdAt',

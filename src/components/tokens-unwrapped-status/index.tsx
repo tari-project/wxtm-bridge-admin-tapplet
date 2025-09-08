@@ -20,17 +20,22 @@ export const TokensUnwrappedStatus = ({
       case TokensUnwrappedEntity.status.AWAITING_CONFIRMATION:
         return {
           label: 'Awaiting Confirmation',
-          color: 'warning',
+          color: 'info',
         };
       case TokensUnwrappedEntity.status.CONFIRMED:
         return {
           label: 'Confirmed',
-          color: 'secondary',
+          color: 'primary',
         };
       case TokensUnwrappedEntity.status.CONFIRMED_AWAITING_APPROVAL:
         return {
           label: 'Confirmed Awaiting Approval',
           color: 'warning',
+        };
+      case TokensUnwrappedEntity.status.INIT_SEND_TOKENS:
+        return {
+          label: 'Init Sending Tokens',
+          color: 'secondary',
         };
       case TokensUnwrappedEntity.status.SENDING_TOKENS:
         return {
@@ -42,10 +47,31 @@ export const TokensUnwrappedStatus = ({
           label: 'Tokens Sent',
           color: 'success',
         };
-      case TokensUnwrappedEntity.status.UNPROCESSABLE:
+      case TokensUnwrappedEntity.status.CREATED_UNPROCESSABLE:
         return {
-          label: 'Unprocessable',
+          label: 'Unprocessable Created',
           color: 'error',
+        };
+      case TokensUnwrappedEntity.status.AWAITING_CONFIRMATION_UNPROCESSABLE:
+        return {
+          label: 'Unprocessable Awaiting Confirmation',
+          color: 'error',
+        };
+      case TokensUnwrappedEntity.status.CONFIRMED_UNPROCESSABLE:
+        return {
+          label: 'Unprocessable Confirmed',
+          color: 'error',
+        };
+      case TokensUnwrappedEntity.status.SENDING_TOKENS_UNPROCESSABLE:
+        return {
+          label: 'Unprocessable sending Tokens',
+          color: 'error',
+        };
+
+      default:
+        return {
+          label: status,
+          color: 'default',
         };
     }
   }, [status]);

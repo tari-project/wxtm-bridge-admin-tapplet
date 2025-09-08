@@ -49,6 +49,10 @@ export const SettingsEdit = () => {
     return query?.data?.data.batchAmountThreshold || '20000000000000000000000'; // 20_000 tokens
   }, [query]);
 
+  const unwrapManualApprovalThreshold = useMemo(() => {
+    return query?.data?.data.unwrapManualApprovalThreshold || '0';
+  }, [query]);
+
   return (
     <Edit isLoading={formLoading} saveButtonProps={saveButtonProps} title="Settings">
       <Box sx={{ p: 2 }}>
@@ -190,6 +194,44 @@ export const SettingsEdit = () => {
               label="Batch Amount Threshold (tokens)"
               error={!!fieldState.error}
               helperText={fieldState.error?.message || 'Default: 20 000 tokens'}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || /^\d+$/.test(value)) {
+                  field.onChange(value === '' ? '' : value + '000000000000000000');
+                }
+              }}
+              slotProps={{
+                htmlInput: {
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                },
+              }}
+            />
+          )}
+        />
+
+        <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
+          Manual Approval Configuration (unwraps)
+        </Typography>
+
+        <Controller
+          control={control}
+          name="unwrapManualApprovalThreshold"
+          defaultValue={unwrapManualApprovalThreshold}
+          rules={{
+            required: 'Batch amount threshold is required',
+            pattern: {
+              value: /^\d+$/,
+              message: 'Must be a valid number',
+            },
+          }}
+          render={({ field, fieldState }) => (
+            <TextField
+              value={field.value ? field.value.slice(0, -18) || '0' : ''}
+              fullWidth
+              sx={{ maxWidth: 320 }}
+              label="Manual Approval Threshold"
+              error={!!fieldState.error}
               onChange={(e) => {
                 const value = e.target.value;
                 if (value === '' || /^\d+$/.test(value)) {
