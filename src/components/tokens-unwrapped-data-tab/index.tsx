@@ -77,13 +77,37 @@ export const TokensUnwrappedTransactionDataTab = ({
           </Box>
         )}
         <TextField
-          label="Block Hash"
+          label=" Ethereum  Block Hash"
           value={transaction.blockHash}
           slotProps={{ input: { readOnly: true } }}
         />
         <TextField
-          label="Block Number"
+          label="Ethereum Block Number"
           value={transaction.blockNumber}
+          slotProps={{ input: { readOnly: true } }}
+        />
+
+        <TextField
+          label="Tari Payment Reference"
+          value={transaction?.tariPaymentReference || ''}
+          slotProps={{ input: { readOnly: true } }}
+        />
+
+        <TextField
+          label="Tari Block Height"
+          value={transaction?.tariBlockHeight || ''}
+          slotProps={{ input: { readOnly: true } }}
+        />
+
+        <TextField
+          label="Tari Timestamp"
+          value={transaction?.tariTxTimestamp || ''}
+          slotProps={{ input: { readOnly: true } }}
+        />
+
+        <TextField
+          label="Tari Temporary Transaction ID"
+          value={transaction?.temporaryTransactionId || ''}
           slotProps={{ input: { readOnly: true } }}
         />
 
