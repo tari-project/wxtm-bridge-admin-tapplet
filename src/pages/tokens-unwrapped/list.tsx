@@ -11,6 +11,7 @@ import { BlockchainExplorerLink } from '../../components/blockchain-explorer-lin
 import { DateFormatedField } from '../../components/date-formated-field';
 import { TruncatedAddress } from '../../components/truncated-address';
 import { TokensUnwrappedStatus } from '../../components/tokens-unwrapped-status';
+import { PaymentWalletBalance } from '../../components/payment-wallet-balance';
 
 import {
   equalsEmptyOperators,
@@ -168,6 +169,7 @@ export const TokensUnwrappedList = () => {
 
   return (
     <List>
+      <PaymentWalletBalance />
       <DataGrid
         {...dataGridProps}
         columns={columns}
