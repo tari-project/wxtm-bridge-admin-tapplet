@@ -2,6 +2,9 @@ import { useMemo } from 'react';
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import { utils } from 'ethers';
 import ReactJsonView from '@microlink/react-json-view';
+import { useApiUrl, useCustomMutation, useInvalidate } from '@refinedev/core';
+
+import { TokensUnwrappedEntity } from '@tari-project/wxtm-bridge-backend-api';
 
 import { TokensUnwrappedStatus } from '../tokens-unwrapped-status';
 import { TokensUnwrappedTransactionDataTabProps } from './types';
@@ -11,6 +14,14 @@ export const TokensUnwrappedTransactionDataTab = ({
   transaction,
   saveButtonProps,
 }: TokensUnwrappedTransactionDataTabProps) => {
+  const apiUrl = useApiUrl();
+  const invalidate = useInvalidate();
+  const { mutate, isLoading } = useCustomMutation();
+
+  const isAwaitingApproval = useMemo(() => {
+    return transaction.status === TokensUnwrappedEntity.status.CONFIRMED_AWAITING_APPROVAL;
+  }, [transaction.status]);
+
   const hasError = useMemo(() => {
     return !!transaction?.error?.length;
   }, [transaction]);
@@ -23,6 +34,24 @@ export const TokensUnwrappedTransactionDataTab = ({
     [saveButtonProps]
   );
 
+  const handleSubmit = () => {
+    mutate(
+      {
+        url: `${apiUrl}/tokens-unwrapped/approve/${transaction.id}`,
+        method: 'patch',
+        values: {},
+      },
+      {
+        onSuccess: () => {
+          invalidate({
+            resource: 'tokens-unwrapped',
+            invalidates: ['all'],
+          });
+        },
+      }
+    );
+  };
+
   return (
     <>
       <Stack direction="row" justifyContent="space-between" mb={5}>
@@ -31,6 +60,17 @@ export const TokensUnwrappedTransactionDataTab = ({
           size="medium"
           sx={{ width: 'auto', minWidth: 150 }}
         />
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          loading={isLoading}
+          sx={{ minWidth: 250 }}
+          disabled={!isAwaitingApproval}
+        >
+          Approve Transaction
+        </Button>
       </Stack>
 
       <Stack gap={6} component="form" autoComplete="off">
