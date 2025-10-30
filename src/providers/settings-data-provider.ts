@@ -26,6 +26,7 @@ export const settingsDataProvider: DataProvider = {
       maxBatchAgeMs: number;
       batchAmountThreshold: string;
       unwrapManualApprovalThreshold: string;
+      wrapDailyLimit: string;
     },
   >({
     variables,
@@ -36,6 +37,7 @@ export const settingsDataProvider: DataProvider = {
       maxBatchAgeMs: number;
       batchAmountThreshold: string;
       unwrapManualApprovalThreshold: string;
+      wrapDailyLimit: string;
     };
 
     await SettingsService.updateSettings({
@@ -44,6 +46,7 @@ export const settingsDataProvider: DataProvider = {
       maxBatchAgeMs: typedVars.maxBatchAgeMs,
       batchAmountThreshold: typedVars.batchAmountThreshold,
       unwrapManualApprovalThreshold: typedVars.unwrapManualApprovalThreshold,
+      wrapDailyLimit: typedVars.wrapDailyLimit,
     });
 
     return {

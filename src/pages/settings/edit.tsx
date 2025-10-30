@@ -53,6 +53,10 @@ export const SettingsEdit = () => {
     return query?.data?.data.unwrapManualApprovalThreshold || '0';
   }, [query]);
 
+  const wrapDailyLimit = useMemo(() => {
+    return query?.data?.data.wrapDailyLimit || '10000000000000000000000000'; // 10_000_000 tokens
+  }, [query]);
+
   return (
     <Edit isLoading={formLoading} saveButtonProps={saveButtonProps} title="Settings">
       <Box sx={{ p: 2 }}>
@@ -231,6 +235,44 @@ export const SettingsEdit = () => {
               fullWidth
               sx={{ maxWidth: 320 }}
               label="Manual Approval Threshold"
+              error={!!fieldState.error}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '' || /^\d+$/.test(value)) {
+                  field.onChange(value === '' ? '' : value + '000000000000000000');
+                }
+              }}
+              slotProps={{
+                htmlInput: {
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                },
+              }}
+            />
+          )}
+        />
+
+        <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
+          Wrap limits
+        </Typography>
+
+        <Controller
+          control={control}
+          name="wrapDailyLimit"
+          defaultValue={wrapDailyLimit}
+          rules={{
+            required: 'Daily wrap limit is required',
+            pattern: {
+              value: /^\d+$/,
+              message: 'Must be a valid number',
+            },
+          }}
+          render={({ field, fieldState }) => (
+            <TextField
+              value={field.value ? field.value.slice(0, -18) || '10000000000000000000000000' : ''}
+              fullWidth
+              sx={{ maxWidth: 320 }}
+              label="Daily wrap limit (XTM)"
               error={!!fieldState.error}
               onChange={(e) => {
                 const value = e.target.value;
