@@ -58,6 +58,14 @@ export const SettingsEdit = () => {
     return query?.data?.data.wrapDailyLimit || '10000000000000000000000000'; // 10_000_000 tokens
   }, [query]);
 
+  const unwrapDailyLimit = useMemo(() => {
+    return query?.data?.data.unwrapDailyLimit || '10000000000000000000000000'; // 10_000_000 tokens
+  }, [query]);
+
+  const unwrapMinDaysOfFunds = useMemo(() => {
+    return query?.data?.data.unwrapMinDaysOfFunds || 3;
+  }, [query]);
+
   return (
     <Edit isLoading={formLoading} saveButtonProps={saveButtonProps} title="Settings">
       <Box sx={{ p: 2 }}>
@@ -337,30 +345,73 @@ export const SettingsEdit = () => {
           </Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-            <TextField
-              fullWidth
-              sx={{ maxWidth: 320 }}
-              label="Unwrap daily limit (xWTM)"
-              helperText="Default: 10 000 000 tokens"
-              slotProps={{
-                htmlInput: {
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
+            <Controller
+              control={control}
+              name="unwrapDailyLimit"
+              defaultValue={unwrapDailyLimit}
+              rules={{
+                required: 'Daily unwrap limit is required',
+                pattern: {
+                  value: /^\d+$/,
+                  message: 'Must be a valid number',
                 },
               }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  value={
+                    field.value ? field.value.slice(0, -18) || '10000000000000000000000000' : ''
+                  }
+                  fullWidth
+                  sx={{ maxWidth: 320 }}
+                  label="Unwrap daily limit (xWTM)"
+                  error={!!fieldState.error}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      field.onChange(value === '' ? '' : value + '000000000000000000');
+                    }
+                  }}
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    },
+                  }}
+                />
+              )}
             />
 
-            <TextField
-              fullWidth
-              sx={{ maxWidth: 320 }}
-              label="Minimum days of funds"
-              helperText="Default: 3 days"
-              slotProps={{
-                htmlInput: {
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
-                },
+            <Controller
+              control={control}
+              name="unwrapMinDaysOfFunds"
+              defaultValue={unwrapMinDaysOfFunds}
+              rules={{
+                required: 'Minimum days of funds is required',
+                min: { value: 1, message: 'Must be at least 1' },
+                max: { value: 10, message: 'Must not exceed 10' },
               }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  sx={{ maxWidth: 320 }}
+                  label="Minimum days of funds"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message || 'Default: 3 days'}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      field.onChange(value === '' ? '' : Number(value));
+                    }
+                  }}
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    },
+                  }}
+                />
+              )}
             />
           </Box>
         </Paper>
