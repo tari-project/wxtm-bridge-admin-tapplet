@@ -27,6 +27,8 @@ export const settingsDataProvider: DataProvider = {
       batchAmountThreshold: string;
       unwrapManualApprovalThreshold: string;
       wrapDailyLimit: string;
+      unwrapDailyLimit: string;
+      unwrapMinDaysOfFunds: number;
     },
   >({
     variables,
@@ -38,6 +40,8 @@ export const settingsDataProvider: DataProvider = {
       batchAmountThreshold: string;
       unwrapManualApprovalThreshold: string;
       wrapDailyLimit: string;
+      unwrapDailyLimit: string;
+      unwrapMinDaysOfFunds: number;
     };
 
     await SettingsService.updateSettings({
@@ -47,6 +51,8 @@ export const settingsDataProvider: DataProvider = {
       batchAmountThreshold: typedVars.batchAmountThreshold,
       unwrapManualApprovalThreshold: typedVars.unwrapManualApprovalThreshold,
       wrapDailyLimit: typedVars.wrapDailyLimit,
+      unwrapDailyLimit: typedVars.unwrapDailyLimit,
+      unwrapMinDaysOfFunds: typedVars.unwrapMinDaysOfFunds,
     });
 
     return {
