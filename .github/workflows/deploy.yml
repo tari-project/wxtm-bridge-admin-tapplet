@@ -1,17 +1,22 @@
-name: 'Deploy Application'
+name: "Deploy Application"
 
 on:
   push:
     branches: [main]
-    tags: ['*']
+    tags: ["*"]
 
 env:
   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
+  tests:
+    uses: ./.github/workflows/ci-tests.yml
+    secrets: inherit
+
   deploy-dev:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    needs: tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -19,8 +24,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: "24"
           cache: npm
+
+      - name: Install sops
+        run: |
+          curl -sLO https://github.com/getsops/sops/releases/download/v3.11.0/sops-v3.11.0.linux.amd64
+          chmod +x sops-v3.11.0.linux.amd64
+          sudo mv sops-v3.11.0.linux.amd64 /usr/local/bin/sops
 
       - name: Install dependencies
         run: |
@@ -32,11 +43,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
-        run: make deploy-dev
+        run: |
+          sops exec-env env.dev.json 'make deploy-dev'
 
   deploy-prod:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    needs: tests
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -44,8 +58,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: "24"
           cache: npm
+
+      - name: Install sops
+        run: |
+          curl -sLO https://github.com/getsops/sops/releases/download/v3.11.0/sops-v3.11.0.linux.amd64
+          chmod +x sops-v3.11.0.linux.amd64
+          sudo mv sops-v3.11.0.linux.amd64 /usr/local/bin/sops
 
       - name: Install dependencies
         run: |
@@ -58,4 +78,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
-        run: make deploy-prod
+        run: |
+          sops exec-env env.prod.json 'make deploy-prod'

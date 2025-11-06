@@ -1,6 +1,3 @@
-include .env
-export $(shell sed 's/=.*//' .env)
-
 DEV_S3_BUCKET_NAME = admin.staging-bridge.tari.com
 DEV_DISTRIBUTION_ID = E30RD7TH79WLJL
 
