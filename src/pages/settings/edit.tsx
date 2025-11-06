@@ -8,6 +8,7 @@ import {
   Box,
   Chip,
   TextField,
+  Paper,
 } from '@mui/material';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Edit } from '@refinedev/mui';
@@ -62,7 +63,7 @@ export const SettingsEdit = () => {
       <Box sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Typography variant="h6" sx={{ mr: 1 }}>
-            Wrap Token Service Status
+            Bridge Status
           </Typography>
           <Chip
             icon={
@@ -102,108 +103,245 @@ export const SettingsEdit = () => {
           )}
         />
 
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Batch Execute Configuration
-        </Typography>
+        <Paper elevation={2} sx={{ mb: 4, p: 3 }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              mb: 2,
+              fontWeight: 'bold',
+              color: 'primary.main',
+              borderBottom: '2px solid',
+              borderColor: 'primary.main',
+              pb: 1,
+            }}
+          >
+            Wrap Features
+          </Typography>
 
-        <Controller
-          control={control}
-          name="maxBatchSize"
-          defaultValue={maxBatchSize}
-          rules={{
-            required: 'Max batch size is required',
-            min: { value: 2, message: 'Must be at least 2' },
-            max: { value: 50, message: 'Must not exceed 50' },
-          }}
-          render={({ field, fieldState }) => (
-            <TextField
-              {...field}
-              fullWidth
-              sx={{ maxWidth: 320, mr: 3 }}
-              label="Max Batch Size"
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message || 'Default: 50 transactions per batch'}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === '' || /^\d+$/.test(value)) {
-                  field.onChange(value === '' ? '' : Number(value));
-                }
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Batch Execute Configuration
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+            <Controller
+              control={control}
+              name="maxBatchSize"
+              defaultValue={maxBatchSize}
+              rules={{
+                required: 'Max batch size is required',
+                min: { value: 2, message: 'Must be at least 2' },
+                max: { value: 50, message: 'Must not exceed 50' },
               }}
-              slotProps={{
-                htmlInput: {
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  sx={{ maxWidth: 320 }}
+                  label="Max Batch Size"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message || 'Default: 50 transactions per batch'}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      field.onChange(value === '' ? '' : Number(value));
+                    }
+                  }}
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="maxBatchAgeMs"
+              defaultValue={maxBatchAge}
+              rules={{
+                required: 'Max batch age is required',
+                min: { value: 60_000, message: 'Must be at least 60000ms (1 minute)' },
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  value={field.value ? Math.round(field.value / 3600000) : ''}
+                  fullWidth
+                  sx={{ maxWidth: 320 }}
+                  label="Max Batch Age (hours)"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message || 'Default: 6 hours'}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      field.onChange(value === '' ? '' : Number(value) * 3600000);
+                    }
+                  }}
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="batchAmountThreshold"
+              defaultValue={batchAmountThreshold}
+              rules={{
+                required: 'Batch amount threshold is required',
+                min: {
+                  value: '1000000000000000000000',
+                  message: 'Min batch threshold is 1 000 tokens',
+                },
+                max: {
+                  value: '5000000000000000000000000',
+                  message: 'Max batch threshold is 50 000 tokens',
+                },
+                pattern: {
+                  value: /^\d+$/,
+                  message: 'Must be a valid number',
                 },
               }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  value={field.value ? field.value.slice(0, -18) || '0' : ''}
+                  fullWidth
+                  sx={{ maxWidth: 320 }}
+                  label="Batch Amount Threshold (tokens)"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message || 'Default: 20 000 tokens'}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      field.onChange(value === '' ? '' : value + '000000000000000000');
+                    }
+                  }}
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    },
+                  }}
+                />
+              )}
             />
-          )}
-        />
+          </Box>
 
-        <Controller
-          control={control}
-          name="maxBatchAgeMs"
-          defaultValue={maxBatchAge}
-          rules={{
-            required: 'Max batch age is required',
-            min: { value: 60_000, message: 'Must be at least 60000ms (1 minute)' },
-          }}
-          render={({ field, fieldState }) => (
-            <TextField
-              value={field.value ? Math.round(field.value / 3600000) : ''}
-              fullWidth
-              sx={{ maxWidth: 320, mr: 3 }}
-              label="Max Batch Age (hours)"
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message || 'Default: 6 hours'}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === '' || /^\d+$/.test(value)) {
-                  field.onChange(value === '' ? '' : Number(value) * 3600000);
-                }
-              }}
-              slotProps={{
-                htmlInput: {
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Daily limits
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+            <Controller
+              control={control}
+              name="wrapDailyLimit"
+              defaultValue={wrapDailyLimit}
+              rules={{
+                required: 'Daily wrap limit is required',
+                pattern: {
+                  value: /^\d+$/,
+                  message: 'Must be a valid number',
                 },
               }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  value={
+                    field.value ? field.value.slice(0, -18) || '10000000000000000000000000' : ''
+                  }
+                  fullWidth
+                  sx={{ maxWidth: 320 }}
+                  label="Daily wrap limit (XTM)"
+                  error={!!fieldState.error}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      field.onChange(value === '' ? '' : value + '000000000000000000');
+                    }
+                  }}
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    },
+                  }}
+                />
+              )}
             />
-          )}
-        />
+          </Box>
+        </Paper>
 
-        <Controller
-          control={control}
-          name="batchAmountThreshold"
-          defaultValue={batchAmountThreshold}
-          rules={{
-            required: 'Batch amount threshold is required',
-            min: {
-              value: '1000000000000000000000',
-              message: 'Min batch threshold is 1 000 tokens',
-            },
-            max: {
-              value: '5000000000000000000000000',
-              message: 'Max batch threshold is 50 000 tokens',
-            },
-            pattern: {
-              value: /^\d+$/,
-              message: 'Must be a valid number',
-            },
-          }}
-          render={({ field, fieldState }) => (
+        <Paper elevation={2} sx={{ mb: 4, p: 3 }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              mb: 2,
+              fontWeight: 'bold',
+              color: 'secondary.main',
+              borderBottom: '2px solid',
+              borderColor: 'secondary.main',
+              pb: 1,
+            }}
+          >
+            Unwrap Features
+          </Typography>
+
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Manual Approval
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+            <Controller
+              control={control}
+              name="unwrapManualApprovalThreshold"
+              defaultValue={unwrapManualApprovalThreshold}
+              rules={{
+                required: 'Batch amount threshold is required',
+                pattern: {
+                  value: /^\d+$/,
+                  message: 'Must be a valid number',
+                },
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  value={field.value ? field.value.slice(0, -18) || '0' : ''}
+                  fullWidth
+                  sx={{ maxWidth: 320 }}
+                  label="Manual Approval Threshold"
+                  error={!!fieldState.error}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^\d+$/.test(value)) {
+                      field.onChange(value === '' ? '' : value + '000000000000000000');
+                    }
+                  }}
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    },
+                  }}
+                />
+              )}
+            />
+          </Box>
+
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Daily limits
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, mb: 3 }}>
             <TextField
-              value={field.value ? field.value.slice(0, -18) || '0' : ''}
               fullWidth
               sx={{ maxWidth: 320 }}
-              label="Batch Amount Threshold (tokens)"
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message || 'Default: 20 000 tokens'}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === '' || /^\d+$/.test(value)) {
-                  field.onChange(value === '' ? '' : value + '000000000000000000');
-                }
-              }}
+              label="Unwrap daily limit (xWTM)"
+              helperText="Default: 10 000 000 tokens"
               slotProps={{
                 htmlInput: {
                   inputMode: 'numeric',
@@ -211,37 +349,12 @@ export const SettingsEdit = () => {
                 },
               }}
             />
-          )}
-        />
 
-        <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
-          Manual Approval Configuration (unwraps)
-        </Typography>
-
-        <Controller
-          control={control}
-          name="unwrapManualApprovalThreshold"
-          defaultValue={unwrapManualApprovalThreshold}
-          rules={{
-            required: 'Batch amount threshold is required',
-            pattern: {
-              value: /^\d+$/,
-              message: 'Must be a valid number',
-            },
-          }}
-          render={({ field, fieldState }) => (
             <TextField
-              value={field.value ? field.value.slice(0, -18) || '0' : ''}
               fullWidth
               sx={{ maxWidth: 320 }}
-              label="Manual Approval Threshold"
-              error={!!fieldState.error}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === '' || /^\d+$/.test(value)) {
-                  field.onChange(value === '' ? '' : value + '000000000000000000');
-                }
-              }}
+              label="Minimum days of funds"
+              helperText="Default: 3 days"
               slotProps={{
                 htmlInput: {
                   inputMode: 'numeric',
@@ -249,46 +362,8 @@ export const SettingsEdit = () => {
                 },
               }}
             />
-          )}
-        />
-
-        <Typography variant="h6" sx={{ mb: 2, mt: 2 }}>
-          Wrap limits
-        </Typography>
-
-        <Controller
-          control={control}
-          name="wrapDailyLimit"
-          defaultValue={wrapDailyLimit}
-          rules={{
-            required: 'Daily wrap limit is required',
-            pattern: {
-              value: /^\d+$/,
-              message: 'Must be a valid number',
-            },
-          }}
-          render={({ field, fieldState }) => (
-            <TextField
-              value={field.value ? field.value.slice(0, -18) || '10000000000000000000000000' : ''}
-              fullWidth
-              sx={{ maxWidth: 320 }}
-              label="Daily wrap limit (XTM)"
-              error={!!fieldState.error}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === '' || /^\d+$/.test(value)) {
-                  field.onChange(value === '' ? '' : value + '000000000000000000');
-                }
-              }}
-              slotProps={{
-                htmlInput: {
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
-                },
-              }}
-            />
-          )}
-        />
+          </Box>
+        </Paper>
       </Box>
     </Edit>
   );
