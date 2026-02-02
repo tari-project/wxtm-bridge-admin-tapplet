@@ -3,6 +3,7 @@ import { SettingsService, SettingsEntity } from '@tari-project/wxtm-bridge-backe
 
 export const ServiceStatus = SettingsEntity.wrapTokensServiceStatus;
 export type ServiceStatus = SettingsEntity.wrapTokensServiceStatus;
+export type WrapServiceStatus = SettingsEntity.bridgeWrapSubmissionsServiceStatus;
 
 export const settingsDataProvider: DataProvider = {
   getList: async () => {
@@ -22,6 +23,7 @@ export const settingsDataProvider: DataProvider = {
     TData = SettingsEntity,
     TVariables = {
       wrapTokensServiceStatus: ServiceStatus;
+      bridgeWrapSubmissionsServiceStatus: WrapServiceStatus;
       maxBatchSize: number;
       maxBatchAgeMs: number;
       batchAmountThreshold: string;
@@ -35,6 +37,7 @@ export const settingsDataProvider: DataProvider = {
   }: UpdateParams<TVariables>): Promise<UpdateResponse<TData>> => {
     const typedVars = variables as {
       wrapTokensServiceStatus: ServiceStatus;
+      bridgeWrapSubmissionsServiceStatus: WrapServiceStatus;
       maxBatchSize: number;
       maxBatchAgeMs: number;
       batchAmountThreshold: string;
@@ -46,6 +49,7 @@ export const settingsDataProvider: DataProvider = {
 
     await SettingsService.updateSettings({
       wrapTokensServiceStatus: typedVars.wrapTokensServiceStatus,
+      bridgeWrapSubmissionsServiceStatus: typedVars.bridgeWrapSubmissionsServiceStatus,
       maxBatchSize: typedVars.maxBatchSize,
       maxBatchAgeMs: typedVars.maxBatchAgeMs,
       batchAmountThreshold: typedVars.batchAmountThreshold,

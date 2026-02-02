@@ -38,6 +38,10 @@ export const SettingsEdit = () => {
     return query?.data?.data.wrapTokensServiceStatus || ServiceStatus.OFFLINE;
   }, [query]);
 
+  const wrapSubmissionStatus = useMemo(() => {
+    return query?.data?.data.bridgeWrapSubmissionsServiceStatus || ServiceStatus.OFFLINE;
+  }, [query]);
+
   const maxBatchSize = useMemo(() => {
     return query?.data?.data.maxBatchSize || 50;
   }, [query]);
@@ -89,27 +93,49 @@ export const SettingsEdit = () => {
           />
         </Box>
 
-        <Controller
-          control={control}
-          name="wrapTokensServiceStatus"
-          defaultValue={status}
-          render={({ field }) => (
-            <FormControl fullWidth sx={{ maxWidth: 320, mb: 3 }}>
-              <InputLabel id="status-select-label">Status</InputLabel>
-              <Select
-                labelId="status-select-label"
-                id="status-select"
-                value={field.value}
-                label="Status"
-                onChange={field.onChange}
-                defaultValue={status}
-              >
-                <MenuItem value={ServiceStatus.ONLINE}>Online</MenuItem>
-                <MenuItem value={ServiceStatus.OFFLINE}>Off</MenuItem>
-              </Select>
-            </FormControl>
-          )}
-        />
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3, mb: 3, flexWrap: 'wrap' }}>
+          <Controller
+            control={control}
+            name="wrapTokensServiceStatus"
+            defaultValue={status}
+            render={({ field }) => (
+              <FormControl fullWidth sx={{ maxWidth: 320 }}>
+                <InputLabel id="status-select-label">Main Service Status</InputLabel>
+                <Select
+                  labelId="status-select-label"
+                  id="status-select"
+                  value={field.value}
+                  label="Main Service Status"
+                  onChange={field.onChange}
+                >
+                  <MenuItem value={ServiceStatus.ONLINE}>Online</MenuItem>
+                  <MenuItem value={ServiceStatus.OFFLINE}>Off</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="bridgeWrapSubmissionsServiceStatus"
+            defaultValue={wrapSubmissionStatus}
+            render={({ field }) => (
+              <FormControl sx={{ minWidth: 200 }} size="small">
+                <InputLabel id="submission-status-select-label">Wrap Submissions</InputLabel>
+                <Select
+                  labelId="submission-status-select-label"
+                  id="submission-status-select"
+                  value={field.value}
+                  label="Wrap Submissions"
+                  onChange={field.onChange}
+                >
+                  <MenuItem value={ServiceStatus.ONLINE}>Active</MenuItem>
+                  <MenuItem value={ServiceStatus.OFFLINE}>Paused</MenuItem>
+                </Select>
+              </FormControl>
+            )}
+          />
+        </Box>
 
         <Paper elevation={2} sx={{ mb: 4, p: 3 }}>
           <Typography
