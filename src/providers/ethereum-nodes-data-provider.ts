@@ -45,7 +45,7 @@ export const ethereumNodesDataProvider: DataProvider = {
     variables,
   }: UpdateParams<TVariables>): Promise<UpdateResponse<TData>> => {
     await EthereumNodesService.updateNode(Number(id), variables as UpdateEthereumNodeReqDTO);
-    return { data: { id } as TData };
+    return { data: { id, ...variables } as TData };
   },
 
   deleteOne: async <TData = EthereumNodeEntity, TVariables = unknown>({
