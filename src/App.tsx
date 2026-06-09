@@ -43,6 +43,7 @@ import { TokensUnwrappedEdit } from './pages/tokens-unwrapped/edit';
 import { customNestjsxCrudDataProvider } from './providers/custom-nestjsx-crud-provider';
 import { SettingsEdit } from './pages/settings';
 import { settingsDataProvider } from './providers/settings-data-provider';
+import { ethereumNodesDataProvider } from './providers/ethereum-nodes-data-provider';
 
 function App() {
   const dataProvider = customNestjsxCrudDataProvider(API_URL, axios);
@@ -77,6 +78,7 @@ function App() {
                     mintLowSafeDataProvider,
                     mintHighSafeDataProvider,
                     settingsDataProvider,
+                    ethereumNodesDataProvider,
                   }}
                   notificationProvider={useNotificationProvider}
                   routerProvider={routerBindings}

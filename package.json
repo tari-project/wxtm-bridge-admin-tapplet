@@ -5,6 +5,9 @@
   "type": "module",
   "dependencies": {
     "@auth0/auth0-react": "^1.5.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@microlink/react-json-view": "^1.26.1",
@@ -23,7 +26,7 @@
     "@safe-global/api-kit": "^3.0.1",
     "@safe-global/protocol-kit": "^6.0.3",
     "@tanstack/react-query": "^5.74.3",
-    "@tari-project/wxtm-bridge-backend-api": "0.1.66",
+    "@tari-project/wxtm-bridge-backend-api": "0.1.68",
     "@tari-project/wxtm-bridge-contracts": "0.1.9",
     "axios": "^1.6.2",
     "connectkit": "^1.9.0",
