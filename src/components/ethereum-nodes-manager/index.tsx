@@ -75,6 +75,9 @@ export const EthereumNodesManager = () => {
         bucket.push(node);
       }
     }
+    for (const bucket of map.values()) {
+      bucket.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+    }
     return map;
   }, [nodes]);
 
