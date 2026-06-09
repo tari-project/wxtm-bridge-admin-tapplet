@@ -239,7 +239,10 @@ export const EthereumNodesManager = () => {
         onSubmit={handleSubmit}
       />
 
-      <Dialog open={deleteTarget !== null} onClose={() => setDeleteTarget(null)}>
+      <Dialog
+        open={deleteTarget !== null}
+        onClose={saving ? undefined : () => setDeleteTarget(null)}
+      >
         <DialogTitle>Delete RPC node?</DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ wordBreak: 'break-all' }}>
