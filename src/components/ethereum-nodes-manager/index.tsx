@@ -48,7 +48,7 @@ export const EthereumNodesManager = () => {
   });
 
   const { mutate: createNode } = useCreate();
-  const { mutate: updateNode } = useUpdate();
+  const { mutate: updateNode, mutateAsync: updateNodeAsync } = useUpdate();
   const { mutate: deleteNode } = useDelete();
 
   // Local mirror of the server list so drag-reorder / toggles feel instant; it
@@ -84,7 +84,7 @@ export const EthereumNodesManager = () => {
   const revalidate = () =>
     invalidate({ resource: RESOURCE, dataProviderName: DATA_PROVIDER, invalidates: ['list'] });
 
-  const handleReorder = (chainId: number, orderedIds: number[]) => {
+  const handleReorder = async (chainId: number, orderedIds: number[]) => {
     const byId = new Map(nodes.map((n) => [n.id, n]));
     const reordered = orderedIds
       .map((id) => byId.get(id))
@@ -97,32 +97,31 @@ export const EthereumNodesManager = () => {
     if (changed.length === 0) {
       return;
     }
-    let remaining = changed.length;
-    changed.forEach((node) => {
-      updateNode(
-        {
-          resource: RESOURCE,
-          dataProviderName: DATA_PROVIDER,
-          id: node.id,
-          values: { sortOrder: node.sortOrder },
-          successNotification: false,
-          mutationMode: 'pessimistic',
-          invalidates: [],
-        },
-        {
-          onSettled: () => {
-            remaining -= 1;
-            if (remaining === 0) {
-              revalidate();
-            }
-          },
-        }
+
+    setSaving(true);
+    try {
+      await Promise.all(
+        changed.map((node) =>
+          updateNodeAsync({
+            resource: RESOURCE,
+            dataProviderName: DATA_PROVIDER,
+            id: node.id,
+            values: { sortOrder: node.sortOrder },
+            successNotification: false,
+            mutationMode: 'pessimistic',
+            invalidates: [],
+          })
+        )
       );
-    });
+    } finally {
+      setSaving(false);
+      revalidate();
+    }
   };
 
   const handleToggleEnabled = (node: EthereumNodeEntity, enabled: boolean) => {
     setNodes((prev) => prev.map((n) => (n.id === node.id ? { ...n, enabled } : n)));
+    setSaving(true);
     updateNode(
       {
         resource: RESOURCE,
@@ -133,7 +132,16 @@ export const EthereumNodesManager = () => {
         mutationMode: 'pessimistic',
         invalidates: [],
       },
-      { onSuccess: revalidate, onError: revalidate }
+      {
+        onSuccess: () => {
+          setSaving(false);
+          revalidate();
+        },
+        onError: () => {
+          setSaving(false);
+          revalidate();
+        },
+      }
     );
   };
 
