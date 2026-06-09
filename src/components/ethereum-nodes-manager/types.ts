@@ -21,6 +21,7 @@ export interface ChainGroupProps {
   onEdit: (node: EthereumNodeEntity) => void;
   onDelete: (node: EthereumNodeEntity) => void;
   onAdd: (chainId: number) => void;
+  disabled?: boolean;
 }
 
 export interface NodeRowProps {
@@ -30,6 +31,7 @@ export interface NodeRowProps {
   onToggleEnabled: (node: EthereumNodeEntity, enabled: boolean) => void;
   onEdit: (node: EthereumNodeEntity) => void;
   onDelete: (node: EthereumNodeEntity) => void;
+  disabled?: boolean;
 }
 
 export interface HealthChipProps {

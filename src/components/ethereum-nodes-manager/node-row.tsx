@@ -12,7 +12,14 @@ import { NodeRowProps } from './types';
  * A single draggable RPC node. The drag handle is isolated to the grip icon so
  * the action buttons and the enabled switch stay clickable.
  */
-export const NodeRow = ({ node, position, onToggleEnabled, onEdit, onDelete }: NodeRowProps) => {
+export const NodeRow = ({
+  node,
+  position,
+  onToggleEnabled,
+  onEdit,
+  onDelete,
+  disabled,
+}: NodeRowProps) => {
   const theme = useTheme();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: node.id,
@@ -41,7 +48,12 @@ export const NodeRow = ({ node, position, onToggleEnabled, onEdit, onDelete }: N
         <IconButton
           size="small"
           disableRipple
-          sx={{ cursor: 'grab', touchAction: 'none', color: 'text.disabled' }}
+          disabled={disabled}
+          sx={{
+            cursor: disabled ? 'not-allowed' : 'grab',
+            touchAction: 'none',
+            color: 'text.disabled',
+          }}
           {...attributes}
           {...listeners}
         >
@@ -91,17 +103,18 @@ export const NodeRow = ({ node, position, onToggleEnabled, onEdit, onDelete }: N
           size="small"
           checked={node.enabled}
           onChange={(e) => onToggleEnabled(node, e.target.checked)}
+          disabled={disabled}
         />
       </Tooltip>
 
       <Tooltip title="Edit node">
-        <IconButton size="small" onClick={() => onEdit(node)}>
+        <IconButton size="small" onClick={() => onEdit(node)} disabled={disabled}>
           <EditIcon fontSize="small" />
         </IconButton>
       </Tooltip>
 
       <Tooltip title="Delete node">
-        <IconButton size="small" color="error" onClick={() => onDelete(node)}>
+        <IconButton size="small" color="error" onClick={() => onDelete(node)} disabled={disabled}>
           <DeleteOutlineIcon fontSize="small" />
         </IconButton>
       </Tooltip>

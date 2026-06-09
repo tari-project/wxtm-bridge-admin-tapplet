@@ -35,6 +35,7 @@ export const ChainGroup = ({
   onEdit,
   onDelete,
   onAdd,
+  disabled,
 }: ChainGroupProps) => {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -89,6 +90,7 @@ export const ChainGroup = ({
           variant="outlined"
           startIcon={<AddIcon />}
           onClick={() => onAdd(chainId)}
+          disabled={disabled}
         >
           Add node
         </Button>
@@ -121,6 +123,7 @@ export const ChainGroup = ({
                   onToggleEnabled={onToggleEnabled}
                   onEdit={onEdit}
                   onDelete={onDelete}
+                  disabled={disabled}
                 />
               ))}
             </Stack>

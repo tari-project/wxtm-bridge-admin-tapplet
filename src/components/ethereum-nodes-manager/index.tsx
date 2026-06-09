@@ -224,6 +224,7 @@ export const EthereumNodesManager = () => {
               onEdit={(node) => setForm({ open: true, chainId: node.chainId, node })}
               onDelete={(node) => setDeleteTarget(node)}
               onAdd={(chainId) => setForm({ open: true, chainId, node: null })}
+              disabled={saving}
             />
           </Box>
         ))
