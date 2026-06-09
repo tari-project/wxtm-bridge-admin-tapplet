@@ -113,6 +113,8 @@ export const EthereumNodesManager = () => {
           })
         )
       );
+    } catch (error) {
+      console.error('Failed to reorder ethereum nodes:', error);
     } finally {
       setSaving(false);
       revalidate();
