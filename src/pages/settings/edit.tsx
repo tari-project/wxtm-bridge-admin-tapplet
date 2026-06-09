@@ -17,6 +17,7 @@ import { Controller } from 'react-hook-form';
 
 import { ServiceStatus } from '../../providers/settings-data-provider';
 import { SettingsEntity } from '@tari-project/wxtm-bridge-backend-api';
+import { EthereumNodesManager } from '../../components/ethereum-nodes-manager';
 
 export const SettingsEdit = () => {
   const {
@@ -441,6 +442,8 @@ export const SettingsEdit = () => {
             />
           </Box>
         </Paper>
+
+        <EthereumNodesManager />
       </Box>
     </Edit>
   );
